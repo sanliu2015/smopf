@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ taglib prefix="fns" uri="/WEB-INF/tlds/fns.tld" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -9,9 +9,63 @@
     <title>登录页</title>
     <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/css/reset.css" />
     <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/css/common.css" />
-    <link rel="stylesheet" href="${fns:getConfig('web.staticFile.urlName')}/css/yui.css">
-    <link rel="stylesheet" href="${fns:getConfig('web.staticFile.urlName')}/font/iconfont.css">
-    <link rel="stylesheet" type="text/css" href='${fns:getConfig('web.staticFile.urlName')}/css/style.css' />
+    <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/css/yui.css">
+    <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/font/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.css" />
+    <script type="text/javascript" src="${fns:getConfig('web.staticFile.urlName')}/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.js"></script>
+	<style type="text/css">
+		.hide{display: none;}
+		#messageBox label{display:inline-block}
+		label.error{background:none;width:180px;padding-left:50px;text-align:center;font-weight:normal;color:#C00;margin:0;}
+	</style>
+    <script type="text/javascript">
+		$(document).ready(function() {
+			$("#loginForm").validate({
+				rules: {
+					validateCode: {remote: "${pageContext.request.contextPath}/servlet/validateCodeServlet"}
+				},
+				messages: {
+					username: {required: "请填写用户名."},
+					password: {required: "请填写密码."},
+					validateCode: {required: "请填写验证码.", remote: "验证码不正确."}
+				},
+				errorLabelContainer: "#messageBox",
+				errorPlacement: function(error, element) {
+					error.appendTo($("#loginError").parent());
+				} 
+			});
+		});
+		// 如果在框架或在对话框中，则弹出提示并跳转到首页
+		if(self.frameElement && self.frameElement.tagName == "IFRAME" || $('#left').length > 0 || $('.jbox').length > 0){
+			alert('未登录或登录超时。请重新登录，谢谢！');
+			top.location = "${ctx}";
+		}
+		
+		function JqValidate() {  
+		    return $("#loginForm").validate({
+				rules: {
+					validateCode: {remote: "${pageContext.request.contextPath}/servlet/validateCodeServlet"}
+				},
+				messages: {
+					username: {required: "请填写用户名."},
+					password: {required: "请填写密码."},
+					validateCode: {required: "请填写验证码.", remote: "验证码不正确."}
+				},
+				errorLabelContainer: "#messageBox",
+				errorPlacement: function(error, element) {
+					error.appendTo($("#loginError").parent());
+				} 
+			});
+		}  
+		
+		function login() {
+			if(JqValidate()){    
+				$("#loginForm").submit();
+		    }  
+		}
+	</script>
 </head>
 
 <body>
@@ -45,49 +99,51 @@
                     <dd>5、填写完毕后将自动进入待审核状态，一般会在1-2个工作日之内进行审核；</dd>
                 </dl>
             </div>
-            <form class="fr adverLogin mt40">
+            <form class="fr adverLogin mt40" id="loginForm" action="${ctx}/login" method="post">
                 <h4>好买机构数据申报平台</h4>
                 <div class="yui-form-cell mt30 mb20 clear">
-                    <div class="cell-left f14 w50 tar pr10">用户名</div>
+                    <label class="cell-left f14 w50 tar pr10" for="username">用户名</label>
                     <div class="cell-right">
-                        <input type="text" class="yui-input w230" placeholder="请输入手机号码">
+                        <input id="username" name="username" type="text" class="yui-input w230 required" placeholder="请输入手机号码" value="${username}">
                     </div>
 			    </div>
                <div class="yui-form-cell mb20 clear">
-                    <div class="cell-left f14 w50 tar pr10">密码</div>
+                    <label class="cell-left f14 w50 tar pr10" for="password">密码</label>
                     <div class="cell-right">
-                        <input type="text" class="yui-input w230" placeholder="请输入密码">
+                        <input id="password" name="password" type="text" class="yui-input w230 required" placeholder="请输入密码">
                     </div>
 			    </div>
                <div class="yui-form-cell mb20 clear">
-                    <div class="cell-left f14 w50 tar pr10">验证码</div>
+                    <label class="cell-left f14 w50 tar pr10" for="validateCode">验证码</label>
                     <div class="cell-right validate">
-                        <input type="text" class="yui-input w230" placeholder="看不清？点击图片刷新">
+                        <input type="text" name="validateCode" id="validateCode" class="yui-input w230 required" placeholder="看不清？点击图片刷新">
                         <img id="checkCode" src="${pageContext.request.contextPath}/servlet/validateCodeServlet" onclick="refreshCode();" alt="">
                         <div class="bcInfo w240 clear">
                             <div class="yui-checkbox mt6 fl">
                                 <label><i class="iconfont">&#xe606;</i></label><input type="checkbox" name="" hidden=""><span>记住密码</span>
                             </div>
                             <div class="yui-checkbox mt6 fr bcInfo">
-                                <a href="">忘记密码/修改密码？</a>
+                                <a href="${pageContext.request.contextPath}${fns:getAdminPath()}/register/resetPassword" target="_blank">忘记密码/修改密码？</a>
                             </div>
                         </div>
                     </div>
 			    </div>
-               <div class="errorMsg tac red">* 用户名或密码错误，请重新输入</div>
-               <a href="javascript:void(0)" class="btn-style-a mt20 db">登 录</a>
-               <div class="bcInfo tac mt15">没有账户 去<a href="机构注册.html">注册</a></div>
+                <div id="messageBox" class="alert alert-error ${empty message ? 'hide' : ''}" >
+                	<label id="loginError" class="error">${message}</label>
+                </div>
+                <a href="javascript:void(0)" onclick="login();" class="btn-style-a mt20 db">登 录</a>
+                <div class="bcInfo tac mt15">没有账户 去<a href="${pageContext.request.contextPath}${fns:getAdminPath()}/register" target="_blank">注册</a></div>
             </form>
         </div>
     </div>
-    <script type="text/javascript" src="${fns:getConfig('web.staticFile.urlName')}/js/jquery.min.js"></script>
+    
     <script src="${fns:getConfig('web.staticFile.urlName')}/js/foot.js"></script>
     <script type="text/javascript" src="${fns:getConfig('web.staticFile.urlName')}/js/yui.js"></script>
     <script type="text/javascript" src="${fns:getConfig('web.staticFile.urlName')}/js/main.js"></script>
-<script type="text/javascript">
-function refreshCode() {
-	$("#checkCode").attr("src", "${pageContext.request.contextPath}/servlet/validateCodeServlet?"+new Date().getTime());
-}
-</script>
+	<script type="text/javascript">
+		function refreshCode() {
+			$("#checkCode").attr("src", "${pageContext.request.contextPath}/servlet/validateCodeServlet?"+new Date().getTime());
+		}
+	</script>
 </body>
 </html>

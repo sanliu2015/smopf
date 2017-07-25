@@ -72,26 +72,57 @@ $(function () {
   }
     
 
+  
     // 验证码倒计时
         var times = 60,
             timer = null;
 
         $(document).on('click', '.requestBtn', function () {
+        	
+        	var pattern = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+        	if (!pattern.test($("#contactPhone").val())) {
+        		layer.alert("请填写正确的手机号码!", {icon: 5,end : function(){$("#contactPhone").focus();}}); 
+        		return false;
+        	}
             var $this = $(this);
-            layer.msg('验证码已发送，请注意查收');
-            // 计时开始
-            timer = setInterval(function () {
-                times--;
-                if (times <= 0) {
-                    $this.text('发送验证码');
-                    clearInterval(timer);
-                    $this.attr('disabled', false);
-                    times = 60;
-                } else {
-                    $this.text(times + '秒');
-                    $this.attr('disabled', true);
-                }
-            }, 1000);
+            if (times < 60) {
+            	layer.msg('请' + times + '秒后再试！');
+            	return false;
+            } else {
+            	$.ajax({
+            		url: ctx + "/register/getPhoneCheckCode",
+					type: "post",
+					cache: false,
+					dataType: "json",
+					data:{"phone":$("#contactPhone").val()},
+			        success:function(resp){  
+			            if(resp.sucFlag == "1"){  
+			            	layer.msg('验证码已发送，请注意查收');
+			            	// 计时开始
+			                timer = setInterval(function () {
+			                    times--;
+			                    if (times <= 0) {
+			                        $this.text('发送验证码');
+			                        clearInterval(timer);
+//			                        $this.attr('disabled', false);
+			                        times = 60;
+			                    } else {
+			                        $this.text(times + '秒');
+//			                        $this.attr('disabled', true);
+			                    }
+			                }, 1000);
+			            }else{  
+			                layer.alert(resp.message, {icon: 0});  
+			            }  
+			        },  
+			        error:function(data) {
+						layer.alert(data.responseText, {icon: 5, area: '500px'});  
+					}
+            	});
+            	
+                
+            }
+            
         });
 
     /*表格隔行变色*/

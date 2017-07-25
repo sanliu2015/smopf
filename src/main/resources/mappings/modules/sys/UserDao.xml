@@ -80,6 +80,7 @@
 		a.update_by AS "updateBy.id",
 		a.update_date,
 		a.del_flag,
+		a.org_code,
     	c.name AS "company.name",
     	c.parent_id AS "company.parent.id",
     	c.parent_ids AS "company.parentIds",
@@ -243,7 +244,8 @@
 			update_date, 
 			remarks, 
 			login_flag, 
-			photo, 
+			photo,
+			org_code, 
 			del_flag
 		) VALUES (
 			#{id}, 
@@ -264,6 +266,7 @@
 			#{remarks}, 
 			#{loginFlag}, 
 			#{photo}, 
+			#{orgCode},
 			#{delFlag}
 		)
 	</insert>
