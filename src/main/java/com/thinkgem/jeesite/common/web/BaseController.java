@@ -102,6 +102,22 @@ public abstract class BaseController {
 		return true;
 	}
 	
+	protected String beanValidatorRetErrorStr(Object object, Class<?>... groups) {
+		try{
+			BeanValidators.validateWithException(validator, object, groups);
+		}catch(ConstraintViolationException ex){
+			List<String> list = BeanValidators.extractPropertyAndMessageAsList(ex, ": ");
+			list.add(0, "数据验证失败：");
+			String[] messages = list.toArray(new String[]{});
+			StringBuilder sb = new StringBuilder();
+			for (String message : messages){
+				sb.append(message).append(messages.length>1?"<br/>":"");
+			}
+			return sb.toString();
+		}
+		return "";
+	}
+	
 	/**
 	 * 服务端参数有效性验证
 	 * @param object 验证的实体对象

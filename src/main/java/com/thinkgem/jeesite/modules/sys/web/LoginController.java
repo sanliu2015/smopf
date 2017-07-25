@@ -180,7 +180,9 @@ public class LoginController extends BaseController{
 ////			request.getSession().setAttribute("aaa", "aa");
 ////		}
 //		System.out.println("==========================b");
-		return "modules/sys/sysIndex";
+		return "redirect:" + adminPath + "/organizationInfo/index?module=2";
+//		return "forward:" + adminPath + "/organizationInfo/index?module=2";
+//		return "modules/sys/sysIndex";
 	}
 	
 	/**

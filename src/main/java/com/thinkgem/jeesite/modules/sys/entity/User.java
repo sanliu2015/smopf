@@ -53,6 +53,8 @@ public class User extends DataEntity<User> {
 	private Role role;	// 根据角色查询用户条件
 	
 	private List<Role> roleList = Lists.newArrayList(); // 拥有角色列表
+	
+	private String orgCode;
 
 	public User() {
 		super();
@@ -321,4 +323,13 @@ public class User extends DataEntity<User> {
 	public String toString() {
 		return id;
 	}
+
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+	
 }
