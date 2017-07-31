@@ -26,14 +26,23 @@ public class Register implements Serializable {
 	private String contactEmail;
 	
 	@Length(min=1, max=20, message="联系人手机号长度必须介于 1 和 20 之间")
-	private String contactPhone;
+	private String contactMobile;
 	
 	private String validateCode;
 	
-	private String phoneCheckCode;
+	private String mobileCheckCode;
 	
 	@Length(min=6, max=32, message="密码长度必须介于 6 和 32 位之间")
 	private String password;
+	
+	private String contactMobileOld;	// 原手机号
+	
+	private String mobileCheckCodeOld;	// 源手机号验证码
+	
+	private String mobileCheckCodeNew;	// 新手机号验证码
+	
+	private String adminId;
+	
 
 	public String getOrgCode() {
 		return orgCode;
@@ -67,12 +76,12 @@ public class Register implements Serializable {
 		this.contactEmail = contactEmail;
 	}
 
-	public String getContactPhone() {
-		return contactPhone;
+	public String getContactMobile() {
+		return contactMobile;
 	}
 
-	public void setContactPhone(String contactPhone) {
-		this.contactPhone = contactPhone;
+	public void setContactMobile(String contactMobile) {
+		this.contactMobile = contactMobile;
 	}
 
 	public String getValidateCode() {
@@ -83,12 +92,12 @@ public class Register implements Serializable {
 		this.validateCode = validateCode;
 	}
 
-	public String getPhoneCheckCode() {
-		return phoneCheckCode;
+	public String getMobileCheckCode() {
+		return mobileCheckCode;
 	}
 
-	public void setPhoneCheckCode(String phoneCheckCode) {
-		this.phoneCheckCode = phoneCheckCode;
+	public void setMobileCheckCode(String mobileCheckCode) {
+		this.mobileCheckCode = mobileCheckCode;
 	}
 
 	public String getPassword() {
@@ -98,6 +107,38 @@ public class Register implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
+	public String getContactMobileOld() {
+		return contactMobileOld;
+	}
+
+	public void setContactMobileOld(String contactMobileOld) {
+		this.contactMobileOld = contactMobileOld;
+	}
+
+	public String getMobileCheckCodeOld() {
+		return mobileCheckCodeOld;
+	}
+
+	public void setMobileCheckCodeOld(String mobileCheckCodeOld) {
+		this.mobileCheckCodeOld = mobileCheckCodeOld;
+	}
+
+	public String getMobileCheckCodeNew() {
+		return mobileCheckCodeNew;
+	}
+
+	public void setMobileCheckCodeNew(String mobileCheckCodeNew) {
+		this.mobileCheckCodeNew = mobileCheckCodeNew;
+	}
+
+	public String getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(String adminId) {
+		this.adminId = adminId;
+	}
+
 	
 }

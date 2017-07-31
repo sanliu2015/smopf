@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.org.dao.OrgAuditLogDao">
+	
+	<select id="queryList" resultType="java.util.Map">
+		select a.id as "id", 
+			a.org_code as "orgCode",
+			b.name as "orgName",
+	    	a.item_code as "itemCode",
+			a.status as "status",
+			a.msg as "msg",
+			TO_CHAR(a.credt,'yyyy-MM-dd') as "credt",
+			TO_CHAR(a.moddt,'yyyy-MM-dd') as "moddt",
+			a.operator as "operator"
+		from ORG_AUDIT_LOG a 
+			inner join ORG_ORGANIZATION_INFO b on a.org_code=b.code 
+		where a.org_Code=#{orgCode} 
+		order by a.credt  
+	</select>
+	
+	<update id="updateFileStatus" parameterType="com.thinkgem.jeesite.modules.org.entity.OrgAttachment">
+		update ORG_ORGANIZATION_INFO 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="itemCode == '1'.toString()">
+				licence_status='1',
+			</if>  
+			<if test="itemCode == '2'.toString()">
+				log_status='1',
+			</if>
+			<if test="itemCode == '3'.toString()">
+				loa_status='1',
+			</if>
+		</trim>
+		where code=#{orgCode}  
+	</update>
+	
+</mapper>

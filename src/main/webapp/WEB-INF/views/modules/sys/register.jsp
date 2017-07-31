@@ -25,7 +25,7 @@
 	</style>
     <script type="text/javascript">
       var ctx = "${ctx}";
-      jQuery.validator.addMethod("isPhone", function(value, element) {
+      jQuery.validator.addMethod("isMobile", function(value, element) {
         var length = value.length;
         var mobile = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
         return this.optional(element) || (length == 11 && mobile.test(value));
@@ -46,15 +46,22 @@
                         required:true,
                         email:true
                     },
-                    contactPhone:{
+                    contactMobile:{
                         required:true,
-                        isPhone:true
+                        isMobile:true,
+                        remote: {
+                        	type:"POST",
+                        	url:"${ctx}/register/checkMobileRegister",
+                        	data:{
+                                mobile:function(){return $("#contactMobile").val();}
+                            } 
+                        }
                     },
                     validateCode:{
                         required:true,
                         remote: "${pageContext.request.contextPath}/servlet/validateCodeServlet"
                     },
-                    phoneCheckCode:{
+                    mobileCheckCode:{
                         required:true
                     },
                     password:{
@@ -70,6 +77,9 @@
                     contactEmail:{
                         email:"邮箱格式有误，请重新输入"
                     },
+                    contactMobile:{
+                		remote: "手机号已注册，请重新输入"
+                	},
                     validateCode:{
                     	remote: "验证码不正确"
                     },
@@ -94,7 +104,7 @@
 				                layer.msg('注册成功!', {icon: 1});  
 				                //window.location.href = "${ctx}/fund/remitDirective/form";
 				            }else{
-				            	layer.alert(data.responseText, {icon: 0, area: ['200px','100px']});  
+				            	layer.alert(data.responseText, {icon: 0});  
 				                //layer.msg(responseText.message, {icon: 0});  
 				            }  
 						},
@@ -107,7 +117,7 @@
 				errorPlacement: function(error, element) {
 					if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
 						error.appendTo(element.parent().parent());
-					} else if (element.attr("id") == "validateCode" || element.attr("id") == "phoneCheckCode") {
+					} else if (element.attr("id") == "validateCode" || element.attr("id") == "mobileCheckCode") {
 						error.insertAfter(element.parent());
 					} else {
 						error.insertAfter(element);
@@ -172,7 +182,7 @@
                 <div class="yui-form-cell mb30 clear">
                     <div class="cell-left w400"><span class="ml15 red">*</span>公司指定联系人手机号：</div>
                     <div class="cell-right">
-                        <input type="text" name="contactPhone" id="contactPhone" class="yui-input w350" placeholder="请输入联系人手机号" maxlength="11">
+                        <input type="text" name="contactMobile" id="contactMobile" class="yui-input w350" placeholder="请输入联系人手机号" maxlength="11">
                     </div>
                 </div>
                 <div class="yui-form-cell mb30 clear">
@@ -185,9 +195,9 @@
                 <div class="yui-form-cell mb30 clear">
                     <div class="cell-left w400"><span class="ml15 red">*</span>手机验证码：</div>
                     <div class="cell-right">
-                        <input type="text" name="phoneCheckCode" id="phoneCheckCode" class="yui-input w200" maxlength='6' placeholder="6位数字验证码">
+                        <input type="text" name="mobileCheckCode" id="mobileCheckCode" class="yui-input w200" maxlength='6' placeholder="6位数字验证码">
                     </div>
-                    <a href="javascript:void(0)" class="requestBtn fl w140">获取验证码</a>
+                    <a href="javascript:void(0)" class="requestBtn fl w140" id="getCode">获取验证码</a>
                 </div>
                 <div class="yui-form-cell mb30 clear">
                     <div class="cell-left w400"><span class="ml15 red">*</span>登录密码：</div>
@@ -215,7 +225,7 @@
     
     <script src="${ctxStatic}/org/js/foot.js"></script>
     <script type="text/javascript" src="${ctxStatic}/org/js/yui.js"></script>
-    <script type="text/javascript" src="${ctxStatic}/org/js/main.js?v072009"></script>
+    <script type="text/javascript" src="${ctxStatic}/org/js/main.js?v201707251400"></script>
 	<script type="text/javascript">
 		function refreshCode() {
 			$("#checkCode").attr("src", "${pageContext.request.contextPath}/servlet/validateCodeServlet?"+new Date().getTime());

@@ -48,24 +48,24 @@ public class RegisterController extends BaseController {
 	}
 	
 	
-	@RequestMapping(value = "getPhoneCheckCode")
+	@RequestMapping(value = "getMobileCheckCode")
 	@ResponseBody
-	public Map<String, Object> getPhoneCheckCode(HttpServletRequest request, HttpServletResponse response) throws InterruptedException {
+	public Map<String, Object> getMobileCheckCode(HttpServletRequest request, HttpServletResponse response) throws InterruptedException {
 		Map<String, Object> respMap = new HashMap<String, Object>();
-		String phone = request.getParameter("phone");
-		if (JedisUtils.getObject(phone) != null) {
-			Map<String, Object> checkCodeMap = (Map<String, Object>)JedisUtils.getObject(phone);
+		String mobile = request.getParameter("mobile");
+		if (JedisUtils.getObject(mobile) != null) {
+			Map<String, Object> checkCodeMap = (Map<String, Object>)JedisUtils.getObject(mobile);
 			if (System.currentTimeMillis() - ((long)checkCodeMap.get("createTime")) > 1000*60) {
 				respMap.put("sucFlag", "0");
 				respMap.put("message", "不可重复获取，请稍后再试！");
 			}
 		} else {
-			String phoneCheckCode = RandomUtil.randomNumbers(6);
-			System.out.println(phoneCheckCode);
+			String mobileCheckCode = RandomUtil.randomNumbers(6);
+			System.out.println(mobileCheckCode);
 			Map<String, Object> checkCodeMap = new HashMap<String, Object>();
-			checkCodeMap.put("code", phoneCheckCode);
+			checkCodeMap.put("code", mobileCheckCode);
 			checkCodeMap.put("createTime", System.currentTimeMillis());
-			JedisUtils.setObject(phone, checkCodeMap, 180);	// 120秒
+			JedisUtils.setObject(mobile, checkCodeMap, 180);	// 120秒
 			// 预留，调用短信接口发送验证码
 			respMap.put("sucFlag", "1");
 		}
@@ -83,8 +83,8 @@ public class RegisterController extends BaseController {
 			StringBuilder message = new StringBuilder(200);
 			message.append("机构已被注册，请联系机构管理人添加账户[姓名：")
 				.append(rs.get(0).get("adminName").toString().substring(1))
-				.append("，手机：").append(rs.get(0).get("adminPhone").toString().substring(0,3))
-				.append("****").append(rs.get(0).get("adminPhone").toString().substring(7));
+				.append("，手机：").append(rs.get(0).get("adminMobile").toString().substring(0,3))
+				.append("****").append(rs.get(0).get("adminMobile").toString().substring(7));
 			int emailFlagIndex = rs.get(0).get("adminEmail").toString().indexOf("@");	// @索引位置
 			int halfIndex = emailFlagIndex >> 2;
 			message.append("，邮箱：").append(rs.get(0).get("adminEmail").toString().substring(0,halfIndex));
@@ -105,12 +105,12 @@ public class RegisterController extends BaseController {
 					respMap.put("message", "验证码不正确！");
 					return respMap;
 				} 
-				if (JedisUtils.getObject(register.getContactPhone()) == null) {
+				if (JedisUtils.getObject(register.getContactMobile()) == null) {
 					respMap.put("sucFlag", "0");
 					respMap.put("message", "手机验证码已过期！");
 					return respMap;
 				}
-				if (!register.getPhoneCheckCode().equals(((Map)JedisUtils.getObject(register.getContactPhone())).get("code"))) {
+				if (!register.getMobileCheckCode().equals(((Map)JedisUtils.getObject(register.getContactMobile())).get("code"))) {
 					respMap.put("sucFlag", "0");
 					respMap.put("message", "手机验证码不正确！");
 					return respMap;
@@ -135,32 +135,57 @@ public class RegisterController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> resetPasswordSubmit(Register register, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> respMap = new HashMap<String, Object>();
-		if (JedisUtils.getObject(register.getContactPhone()) == null) {
+		if (JedisUtils.getObject(register.getContactMobile()) == null) {
 			respMap.put("sucFlag", "0");
 			respMap.put("message", "手机验证码已过期！");
 			return respMap;
 		}
-		if (!register.getPhoneCheckCode().equals(((Map)JedisUtils.getObject(register.getContactPhone())).get("code"))) {
+		if (!register.getMobileCheckCode().equals(((Map)JedisUtils.getObject(register.getContactMobile())).get("code"))) {
 			respMap.put("sucFlag", "0");
 			respMap.put("message", "手机验证码不正确！");
 			return respMap;
 		}
-		List<Map<String, Object>> rs = organizationInfoService.queryUserByPhone(register.getContactPhone());
+		List<Map<String, Object>> rs = organizationInfoService.queryUserByMobile(register.getContactMobile());
 		String userId = "" + rs.get(0).get("id");
 		systemService.updatePasswordById(userId, "", register.getPassword());
 		respMap.put("sucFlag", "1");
 		return respMap;
 	}
 	
-	@RequestMapping(value = "checkPhoneRegister")
+	/**
+	 * 注册时验证，手机号不能重复
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "checkMobileRegister")
 	@ResponseBody
-	public boolean checkPhoneRegister(HttpServletRequest request, HttpServletResponse response) {
-		String phone = request.getParameter("contactPhone");
-		List<Map<String, Object>> rs = organizationInfoService.queryUserByPhone(phone);
-		if (rs != null && rs.size() > 0) {
+	public boolean checkMobileRegister(HttpServletRequest request, HttpServletResponse response) {
+		String mobile = request.getParameter("mobile");
+		List<Map<String, Object>> rs = organizationInfoService.queryUserByMobile(mobile);
+		if (rs == null || rs.size() == 0) {
 			return true;
 		} else {
 			return false;
+		}
+		
+	}
+	
+	/**
+	 * 忘记密码必须填写手机号
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "checkMobileExists")
+	@ResponseBody
+	public boolean checkMobileExists(HttpServletRequest request, HttpServletResponse response) {
+		String mobile = request.getParameter("mobile");
+		List<Map<String, Object>> rs = organizationInfoService.queryUserByMobile(mobile);
+		if (rs == null || rs.size() == 0) {
+			return false;
+		} else {
+			return true;
 		}
 		
 	}

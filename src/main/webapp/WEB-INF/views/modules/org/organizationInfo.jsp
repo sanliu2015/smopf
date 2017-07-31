@@ -36,10 +36,11 @@
 	        <div class="yui-form-cell clear">
 	            <div class="cell-left w400">公司指定联系人手机：</div>
 	            <div class="cell-right ml10">
-	                <p class="sectionTxt fwb">${organMap.adminPhone}</p>
+	                <p class="sectionTxt fwb">${organMap.adminMobile}</p>
 	            </div>
 	        </div>
-	        <a href="机构信息-修改.html" class="btn-style-a db w350 mt20 ml250">修 改</a>
+	        
+	        <a href="${ctx}/organizationInfo/edit?module=2" class="btn-style-a db w350 mt20 ml250">修 改</a>
 	    </div>
 	</div>
 </body>

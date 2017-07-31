@@ -16,7 +16,6 @@ import com.thinkgem.jeesite.modules.sys.entity.Role;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.SystemService;
 
-
 @Service
 @Transactional(readOnly = true)
 public class RegisterService {
@@ -36,9 +35,9 @@ public class RegisterService {
 		user.setOrgCode(register.getOrgCode());
 		user.setUserType("FADM");
 		user.setName(register.getContactName());
-		user.setPhone(register.getContactPhone());
+		user.setMobile(register.getContactMobile());
 		user.setEmail(register.getContactEmail());
-		user.setLoginName(register.getContactPhone());
+		user.setLoginName(register.getContactMobile());
 		user.setPassword(SystemService.entryptPassword(register.getPassword()));
 		// 其他相关参数初始化
 		Office company = new Office();

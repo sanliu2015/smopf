@@ -77,11 +77,11 @@ $(function () {
         var times = 60,
             timer = null;
 
-        $(document).on('click', '.requestBtn', function () {
+        $(document).on('click', '#getCode', function () {
         	
         	var pattern = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
-        	if (!pattern.test($("#contactPhone").val())) {
-        		layer.alert("请填写正确的手机号码!", {icon: 5,end : function(){$("#contactPhone").focus();}}); 
+        	if (!pattern.test($("#contactMobile").val())) {
+        		layer.alert("请填写正确的手机号码!", {icon: 5,end : function(){$("#contactMobile").focus();}}); 
         		return false;
         	}
             var $this = $(this);
@@ -90,12 +90,13 @@ $(function () {
             	return false;
             } else {
             	$.ajax({
-            		url: ctx + "/register/getPhoneCheckCode",
+            		url: ctx + "/register/getMobileCheckCode",
 					type: "post",
 					cache: false,
 					dataType: "json",
-					data:{"phone":$("#contactPhone").val()},
+					data:{"mobile":$("#contactMobile").val()},
 			        success:function(resp){  
+			        	debugger;
 			            if(resp.sucFlag == "1"){  
 			            	layer.msg('验证码已发送，请注意查收');
 			            	// 计时开始

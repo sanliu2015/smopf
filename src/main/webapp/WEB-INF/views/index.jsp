@@ -7,13 +7,14 @@
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <title>登录页</title>
-    <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/css/reset.css" />
-    <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/css/common.css" />
-    <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/css/yui.css">
-    <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/font/iconfont.css">
-    <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/css/style.css" />
+    <%-- <link rel="stylesheet" type="text/css" href="${fns:getConfig('web.staticFile.urlName')}/css/reset.css" /> --%>
+    <link rel="stylesheet" type="text/css" href="${ctxStatic}/org/css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="${ctxStatic}/org/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="${ctxStatic}/org/css/yui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxStatic}/org/font/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="${ctxStatic}/org/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.css" />
-    <script type="text/javascript" src="${fns:getConfig('web.staticFile.urlName')}/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/org/js/jquery.min.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.js"></script>
 	<style type="text/css">
 		.hide{display: none;}
@@ -110,7 +111,7 @@
                <div class="yui-form-cell mb20 clear">
                     <label class="cell-left f14 w50 tar pr10" for="password">密码</label>
                     <div class="cell-right">
-                        <input id="password" name="password" type="text" class="yui-input w230 required" placeholder="请输入密码">
+                        <input id="password" name="password" type="password" class="yui-input w230 required" placeholder="请输入密码">
                     </div>
 			    </div>
                <div class="yui-form-cell mb20 clear">
@@ -137,9 +138,9 @@
         </div>
     </div>
     
-    <script src="${fns:getConfig('web.staticFile.urlName')}/js/foot.js"></script>
-    <script type="text/javascript" src="${fns:getConfig('web.staticFile.urlName')}/js/yui.js"></script>
-    <script type="text/javascript" src="${fns:getConfig('web.staticFile.urlName')}/js/main.js"></script>
+    <script src="${ctxStatic}/org/js/foot.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/org/js/yui.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/org/js/main.js"></script>
 	<script type="text/javascript">
 		function refreshCode() {
 			$("#checkCode").attr("src", "${pageContext.request.contextPath}/servlet/validateCodeServlet?"+new Date().getTime());

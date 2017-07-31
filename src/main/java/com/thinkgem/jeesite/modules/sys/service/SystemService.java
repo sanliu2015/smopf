@@ -380,13 +380,19 @@ public class SystemService extends BaseService {
 	 * 获取Key加载信息
 	 */
 	public static boolean printKeyLoadMessage(){
+		/**不打印
 		StringBuilder sb = new StringBuilder();
 		sb.append("\r\n======================================================================\r\n");
 		sb.append("\r\n    欢迎使用 "+Global.getConfig("productName")+"  - Powered By http://jeesite.com\r\n");
 		sb.append("\r\n======================================================================\r\n");
 		System.out.println(sb.toString());
+		**/
 		return true;
+		
 	}
+	
+	
+	
 	
 	
 }

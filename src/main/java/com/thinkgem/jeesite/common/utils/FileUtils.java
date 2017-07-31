@@ -363,6 +363,52 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 		}
 
 	}
+	
+	/**
+	 * delFlag 当true表示如果文件存在则删除
+	 * @param descFileName
+	 * @param delFlag
+	 * @return
+	 */
+	public static boolean createFile(String descFileName, boolean delFlag) {
+		File file = new File(descFileName);
+		if (file.exists()) {
+			if (delFlag) {
+				file.delete();
+			} else {
+				logger.debug("文件 " + descFileName + " 已存在!");
+				return false;
+			}
+			
+		}
+		if (descFileName.endsWith(File.separator)) {
+			logger.debug(descFileName + " 为目录，不能创建目录!");
+			return false;
+		}
+		if (!file.getParentFile().exists()) {
+			// 如果文件所在的目录不存在，则创建目录
+			if (!file.getParentFile().mkdirs()) {
+				logger.debug("创建文件所在的目录失败!");
+				return false;
+			}
+		}
+
+		// 创建文件
+		try {
+			if (file.createNewFile()) {
+				logger.debug(descFileName + " 文件创建成功!");
+				return true;
+			} else {
+				logger.debug(descFileName + " 文件创建失败!");
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug(descFileName + " 文件创建失败!");
+			return false;
+		}
+
+	}
 
 	/**
 	 * 创建目录
