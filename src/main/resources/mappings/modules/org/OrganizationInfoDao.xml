@@ -70,6 +70,7 @@
 			a.phone,
 			a.mobile,
 			a.user_type as "userType",
+			a.login_flag as "loginFlag",
 			a.del_flag as "delFlag"
 			from sys_user a 
 		where a.org_Code=#{orgCode} 
@@ -78,7 +79,7 @@
 	
 	<update id="updateUserStatus">
 		UPDATE SYS_USER SET 
-			del_flag=#{delFlag}
+			login_flag=#{loginFlag}
 		WHERE id=#{userId}
 	</update>
 	

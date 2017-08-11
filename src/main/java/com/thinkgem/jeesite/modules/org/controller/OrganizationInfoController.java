@@ -29,7 +29,7 @@ import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
  *
  */
 @Controller
-@RequestMapping("${adminPath}/organizationInfo")
+@RequestMapping("${frontPath}/organizationInfo")
 public class OrganizationInfoController extends BaseController {
 
 	@Autowired
@@ -87,12 +87,15 @@ public class OrganizationInfoController extends BaseController {
 			respMap.put("message", "验证码不正确！");
 			return respMap;
 		} 
-		if (JedisUtils.getObject(register.getContactMobileOld()) == null) {
+		
+		Object cacheMap = JedisUtils.getObject("oe" + register.getContactMobileOld());
+		
+		if (cacheMap == null) {
 			respMap.put("sucFlag", "0");
 			respMap.put("message", "原手机验证码已过期！");
 			return respMap;
 		}
-		if (!register.getMobileCheckCodeOld().equals(((Map)JedisUtils.getObject(register.getContactMobileOld())).get("code"))) {
+		if (!register.getMobileCheckCodeOld().equals(((Map)cacheMap).get("code"))) {
 			respMap.put("sucFlag", "0");
 			respMap.put("message", "原手机验证码不正确！");
 			return respMap;
@@ -100,12 +103,15 @@ public class OrganizationInfoController extends BaseController {
 		
 		// 如果手机号不一致
 		if (!register.getContactMobileOld().equals(register.getContactMobile())) {
-			if (JedisUtils.getObject(register.getContactMobile()) == null) {
+			
+			Object newMobileMap = JedisUtils.getObject("oe" + register.getContactMobile());
+			
+			if (newMobileMap == null) {
 				respMap.put("sucFlag", "0");
 				respMap.put("message", "新手机号验证码已过期！");
 				return respMap;
 			}
-			if (!register.getMobileCheckCodeNew().equals(((Map)JedisUtils.getObject(register.getContactMobile())).get("code"))) {
+			if (!register.getMobileCheckCodeNew().equals(((Map)newMobileMap).get("code"))) {
 				respMap.put("sucFlag", "0");
 				respMap.put("message", "新手机号验证码不正确！");
 				return respMap;
@@ -135,11 +141,11 @@ public class OrganizationInfoController extends BaseController {
 	
 	@RequestMapping(value = "updateUser")
 	@ResponseBody
-	public Map<String, Object> updateUser(HttpServletRequest request, HttpServletResponse response, @RequestParam String userId, @RequestParam String delFlag) {
+	public Map<String, Object> updateUser(HttpServletRequest request, HttpServletResponse response, @RequestParam String userId, @RequestParam String loginFlag) {
 		Map<String, Object> respMap = new HashMap<String, Object>();
 		Map<String, Object> paraMap = new HashMap<String, Object>();
 		paraMap.put("userId", userId);
-		paraMap.put("delFlag", delFlag);
+		paraMap.put("loginFlag", loginFlag);
 		int rs = organizationInfoService.updateUserStatus(paraMap);
 		User user = systemService.getUser(userId);
 		UserUtils.clearCache(user);

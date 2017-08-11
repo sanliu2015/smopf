@@ -27,6 +27,7 @@ import com.thinkgem.jeesite.common.utils.CookieUtils;
 import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.security.FormAuthenticationFilter;
 import com.thinkgem.jeesite.modules.sys.security.SystemAuthorizingRealm.Principal;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
@@ -45,10 +46,10 @@ public class LoginController extends BaseController{
 	/**
 	 * 管理登录
 	 */
-	@RequestMapping(value = "${adminPath}/login", method = RequestMethod.GET)
+	@RequestMapping(value = {"${adminPath}/login", "${frontPath}/login"}, method = RequestMethod.GET)
 	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
 		Principal principal = UserUtils.getPrincipal();
-
+//		String path = request.getServletPath();
 //		// 默认页签模式
 //		String tabmode = CookieUtils.getCookie(request, "tabmode");
 //		if (tabmode == null){
@@ -66,7 +67,12 @@ public class LoginController extends BaseController{
 		
 		// 如果已经登录，则跳转到管理首页
 		if(principal != null && !principal.isMobileLogin()){
-			return "redirect:" + adminPath;
+			User currentUser = UserUtils.getUser();
+			if (currentUser.getUserType() != null && currentUser.getUserType().toLowerCase().startsWith("f")) {	// 前台用户
+				return "redirect:" + frontPath;
+			} else {
+				return "redirect:" + adminPath;
+			}
 		}
 //		String view;
 //		view = "/WEB-INF/views/modules/sys/sysLogin.jsp";
@@ -74,19 +80,32 @@ public class LoginController extends BaseController{
 //		view += "jar:file:/D:/GitHub/jeesite/src/main/webapp/WEB-INF/lib/jeesite.jar!";
 //		view += "/"+getClass().getName().replaceAll("\\.", "/").replace(getClass().getSimpleName(), "")+"view/sysLogin";
 //		view += ".jsp";
-		return "index";
+		
+		String path = request.getServletPath().substring(0, request.getServletPath().lastIndexOf("/"));
+		if (path.equals(adminPath)) {
+			return "indexAdmin";
+		} else {
+			return "index";
+		}
+		
 	}
 
 	/**
 	 * 登录失败，真正登录的POST请求由Filter完成
 	 */
-	@RequestMapping(value = "${adminPath}/login", method = RequestMethod.POST)
+	@RequestMapping(value = {"${adminPath}/login", "${frontPath}/login"}, method = RequestMethod.POST)
 	public String loginFail(HttpServletRequest request, HttpServletResponse response, Model model) {
 		Principal principal = UserUtils.getPrincipal();
 		
 		// 如果已经登录，则跳转到管理首页
 		if(principal != null){
-			return "redirect:" + adminPath;
+			User currentUser = UserUtils.getUser();
+			if (currentUser.getUserType() != null && currentUser.getUserType().toLowerCase().startsWith("f")) {	// 前台用户
+				return "redirect:" + frontPath;
+			} else {
+				return "redirect:" + adminPath;
+			}
+//			return "redirect:" + adminPath;
 		}
 
 		String username = WebUtils.getCleanParam(request, FormAuthenticationFilter.DEFAULT_USERNAME_PARAM);
@@ -123,14 +142,19 @@ public class LoginController extends BaseController{
 	        return renderString(response, model);
 		}
 		
-		return "index";
+		String path = request.getServletPath().substring(0, request.getServletPath().lastIndexOf("/"));
+		if (path.equals(adminPath)) {
+			return "indexAdmin";
+		} else {
+			return "index";
+		}
 	}
 
 	/**
 	 * 登录成功，进入管理首页
 	 */
 	@RequiresPermissions("user")
-	@RequestMapping(value = "${adminPath}")
+	@RequestMapping(value = {"${adminPath}", "${frontPath}"})
 	public String index(HttpServletRequest request, HttpServletResponse response) {
 		Principal principal = UserUtils.getPrincipal();
 
@@ -148,7 +172,7 @@ public class LoginController extends BaseController{
 				CookieUtils.setCookie(response, "LOGINED", "true");
 			}else if (StringUtils.equals(logined, "true")){
 				UserUtils.getSubject().logout();
-				return "redirect:" + adminPath + "/login";
+				return "redirect:" + request.getServletPath().substring(0, request.getServletPath().lastIndexOf("/")) + "/login";
 			}
 		}
 		
@@ -160,7 +184,7 @@ public class LoginController extends BaseController{
 			if (request.getParameter("index") != null){
 				return "modules/sys/sysIndex";
 			}
-			return "redirect:" + adminPath + "/login";
+			return "redirect:" + request.getServletPath().substring(0, request.getServletPath().lastIndexOf("/")) + "/login";
 		}
 		
 //		// 登录成功后，获取上次登录的当前站点ID
@@ -180,10 +204,17 @@ public class LoginController extends BaseController{
 ////			request.getSession().setAttribute("aaa", "aa");
 ////		}
 //		System.out.println("==========================b");
-		return "redirect:" + adminPath + "/organizationInfo/index?module=2";
-//		return "forward:" + adminPath + "/organizationInfo/index?module=2";
-//		return "modules/sys/sysIndex";
+		
+		User currentUser = UserUtils.getUser();
+		if (currentUser.getUserType() != null && currentUser.getUserType().toLowerCase().startsWith("f")) {	// 前台用户
+			return "redirect:" + frontPath + "/organizationInfo/index?module=2";
+		} else {
+			return "modules/sys/sysIndex";
+		}
+		
 	}
+	
+	
 	
 	/**
 	 * 获取主题方案

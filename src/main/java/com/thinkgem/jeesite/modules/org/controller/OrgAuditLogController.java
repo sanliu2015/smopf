@@ -31,7 +31,7 @@ import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
  */
 
 @Controller
-@RequestMapping("${adminPath}/orgAuditLog")
+@RequestMapping("${frontPath}/orgAuditLog")
 public class OrgAuditLogController extends BaseController {
 	
 	@Autowired
@@ -75,8 +75,40 @@ public class OrgAuditLogController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> submitAudit(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> respMap = new HashMap<String, Object>();
-//		orgAuditLogService.submitAudit();
-		respMap.put("sucFlag", "1");
+		OrganizationInfo organizationInfo = organizationInfoService.findObject(UserUtils.getUser().getOrgCode());
+		if ("1".equals(organizationInfo.getStatus())) {
+			respMap.put("sucFlag", "0");
+			respMap.put("msg", "资质审核已通过，不需要再次提交！");
+			return respMap;
+		} else {
+			
+			StringBuilder msg = new StringBuilder();
+			boolean errorFlag = false;
+			if ("0".equals(organizationInfo.getLicenceStatus()) || "2".equals(organizationInfo.getLicenceStatus())) {
+				errorFlag = true;
+				msg.append("<br>").append("请上传营业执照！");
+			}
+			if ("0".equals(organizationInfo.getLogStatus()) || "2".equals(organizationInfo.getLogStatus())) {
+				errorFlag = true;
+				msg.append("<br>").append("请上传产品净值保证函！");
+			}
+			if ("0".equals(organizationInfo.getLoaStatus()) || "2".equals(organizationInfo.getLoaStatus())) {
+				errorFlag = true;
+				msg.append("<br>").append("请上传产品披露授权函！");
+			}
+			
+			if (errorFlag) {
+				respMap.put("sucFlag", "0");
+				respMap.put("msg", msg.toString());
+				return respMap;
+			} else {
+				orgAuditLogService.submitAudit(organizationInfo);
+				respMap.put("sucFlag", "1");
+			}
+			
+			
+		}
+
 		return respMap;
 	}
 	

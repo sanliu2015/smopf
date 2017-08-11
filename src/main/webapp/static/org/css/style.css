@@ -117,6 +117,9 @@ table th{background:#ebf5ff;color:#333;}
     text-decoration:none; background-position:right 0;
 }
 .displayArrow a.open:hover{background-position:right -122px}
+.reason{width:180px;position:relative;top:25px;}
+.reason textarea{display:block;border:none;-webkit-appearance:none;outline:none;background: #f7f7f7;padding:5px;height:auto;color:#999;font-size:14px;position:relative;top:-10px;}
+.reason i{position:absolute;top:5px;width:20px;height:10px;display:block;background:url('../images/tri.png');background-size:contain;left:20px;}
 
 
 

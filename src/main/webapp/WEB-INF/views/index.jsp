@@ -14,8 +14,9 @@
     <link rel="stylesheet" type="text/css" href="${ctxStatic}/org/font/iconfont.css">
     <link rel="stylesheet" type="text/css" href="${ctxStatic}/org/css/style.css" />
     <link rel="stylesheet" type="text/css" href="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.css" />
-    <script type="text/javascript" src="${ctxStatic}/org/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/jquery/jquery-2.2.4.min.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/layer/3.0.3/layer.js"></script>
 	<style type="text/css">
 		.hide{display: none;}
 		#messageBox label{display:inline-block}
@@ -28,9 +29,7 @@
 					validateCode: {remote: "${pageContext.request.contextPath}/servlet/validateCodeServlet"}
 				},
 				messages: {
-					username: {required: "请填写用户名."},
-					password: {required: "请填写密码."},
-					validateCode: {required: "请填写验证码.", remote: "验证码不正确."}
+					validateCode: {remote: "验证码不正确."}
 				},
 				errorLabelContainer: "#messageBox",
 				errorPlacement: function(error, element) {
@@ -44,27 +43,27 @@
 			top.location = "${ctx}";
 		}
 		
-		function JqValidate() {  
-		    return $("#loginForm").validate({
-				rules: {
-					validateCode: {remote: "${pageContext.request.contextPath}/servlet/validateCodeServlet"}
-				},
-				messages: {
-					username: {required: "请填写用户名."},
-					password: {required: "请填写密码."},
-					validateCode: {required: "请填写验证码.", remote: "验证码不正确."}
-				},
-				errorLabelContainer: "#messageBox",
-				errorPlacement: function(error, element) {
-					error.appendTo($("#loginError").parent());
-				} 
-			});
-		}  
 		
 		function login() {
-			if(JqValidate()){    
-				$("#loginForm").submit();
-		    }  
+			if ($("#username").val() == "") {
+				layer.alert("用户名不能为空！", {icon: 5, end: function(){
+					parent.$("#username").focus();
+				}});  
+				return false;
+			}
+			if ($("#password").val() == "") {
+				layer.alert("密码不能为空！", {icon: 5, end: function(){
+					parent.$("#password").focus();
+				}});  
+				return false;
+			}
+			if ($("#validateCode").val() == "") {
+				layer.alert("验证码不能为空！", {icon: 5, end: function(){
+					parent.$("#validateCode").focus();
+				}});  
+				return false;
+			}
+			$("#loginForm").submit();
 		}
 	</script>
 </head>
@@ -100,31 +99,31 @@
                     <dd>5、填写完毕后将自动进入待审核状态，一般会在1-2个工作日之内进行审核；</dd>
                 </dl>
             </div>
-            <form class="fr adverLogin mt40" id="loginForm" action="${ctx}/login" method="post">
+            <form class="fr adverLogin mt40" id="loginForm" action="${ctxFront}/login" method="post">
                 <h4>好买机构数据申报平台</h4>
                 <div class="yui-form-cell mt30 mb20 clear">
                     <label class="cell-left f14 w50 tar pr10" for="username">用户名</label>
                     <div class="cell-right">
-                        <input id="username" name="username" type="text" class="yui-input w230 required" placeholder="请输入手机号码" value="${username}">
+                        <input id="username" name="username" type="text" class="yui-input w230" placeholder="请输入手机号码" value="${username}">
                     </div>
 			    </div>
                <div class="yui-form-cell mb20 clear">
                     <label class="cell-left f14 w50 tar pr10" for="password">密码</label>
                     <div class="cell-right">
-                        <input id="password" name="password" type="password" class="yui-input w230 required" placeholder="请输入密码">
+                        <input id="password" name="password" type="password" class="yui-input w230" placeholder="请输入密码">
                     </div>
 			    </div>
                <div class="yui-form-cell mb20 clear">
                     <label class="cell-left f14 w50 tar pr10" for="validateCode">验证码</label>
                     <div class="cell-right validate">
-                        <input type="text" name="validateCode" id="validateCode" class="yui-input w230 required" placeholder="看不清？点击图片刷新">
+                        <input type="text" name="validateCode" id="validateCode" class="yui-input w230" placeholder="看不清？点击图片刷新">
                         <img id="checkCode" src="${pageContext.request.contextPath}/servlet/validateCodeServlet" onclick="refreshCode();" alt="">
                         <div class="bcInfo w240 clear">
                             <div class="yui-checkbox mt6 fl">
-                                <label><i class="iconfont">&#xe606;</i></label><input type="checkbox" name="" hidden=""><span>记住密码</span>
+                                <label><i class="iconfont">&#xe606;</i></label><input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}><span>记住密码</span>
                             </div>
                             <div class="yui-checkbox mt6 fr bcInfo">
-                                <a href="${pageContext.request.contextPath}${fns:getAdminPath()}/register/resetPassword" target="_blank">忘记密码/修改密码？</a>
+                                <a href="${ctxFront}/register/resetPassword" target="_blank">忘记密码/修改密码？</a>
                             </div>
                         </div>
                     </div>
@@ -133,12 +132,12 @@
                 	<label id="loginError" class="error">${message}</label>
                 </div>
                 <a href="javascript:void(0)" onclick="login();" class="btn-style-a mt20 db">登 录</a>
-                <div class="bcInfo tac mt15">没有账户 去<a href="${pageContext.request.contextPath}${fns:getAdminPath()}/register" target="_blank">注册</a></div>
+                <div class="bcInfo tac mt15">没有账户 去<a href="${pageContext.request.contextPath}${fns:getFrontPath()}/register">注册</a></div>
             </form>
         </div>
     </div>
     
-    <script src="${ctxStatic}/org/js/foot.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/org/js/foot.js"></script>
     <script type="text/javascript" src="${ctxStatic}/org/js/yui.js"></script>
     <script type="text/javascript" src="${ctxStatic}/org/js/main.js"></script>
 	<script type="text/javascript">

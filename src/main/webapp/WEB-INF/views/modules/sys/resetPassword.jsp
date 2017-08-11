@@ -15,12 +15,13 @@
     <link rel="stylesheet" type="text/css" href="${ctxStatic}/org/css/style.css" />
     
     <link rel="stylesheet" type="text/css" href="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.css" />
-    <script type="text/javascript" src="${ctxStatic}/org/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/jquery/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="${ctxStatic}/jquery-form/jquery.form.min.js"></script>
     <script type="text/javascript" src="${ctxStatic}/layer/3.0.3/layer.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.js"></script>
     <script type="text/javascript">
       var ctx = "${ctx}";
+      var ctxFront = "${ctxFront}";
       jQuery.validator.addMethod("isMobile", function(value, element) {
         var length = value.length;
         var mobile = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
@@ -36,7 +37,7 @@
                         isMobile:true,
                         remote: {
                         	type:"POST",
-                        	url:"${ctx}/register/checkMobileExists",
+                        	url:"${ctxFront}/register/checkMobileExists",
                         	data:{
                                 mobile:function(){return $("#contactMobile").val();}
                             } 
@@ -75,7 +76,7 @@
                 },
 				submitHandler: function(form){
 					$('#inputForm').ajaxSubmit({
-						url : "${ctx}/register/resetPasswordSubmit",  
+						url : "${ctxFront}/register/resetPasswordSubmit",  
 						type : "post",  
 						dataType : "json", 
 						beforeSend : function(XMLHttpRequest) {
@@ -125,7 +126,7 @@
     <div class="bg">
         <div class="w1130 mgCenter mainBox">
             <div class="mainTitle">重置密码</div>
-            <form:form id="inputForm" modelAttribute="register" action="${ctx}/register/resetPasswordSubmit" method="post" >
+            <form:form id="inputForm" modelAttribute="register" action="${ctxFront}/register/resetPasswordSubmit" method="post" >
             <div class="contentSub pt50">
                 <div class="yui-form-cell mb30 clear">
                     <div class="cell-left w400">注册手机号：</div>

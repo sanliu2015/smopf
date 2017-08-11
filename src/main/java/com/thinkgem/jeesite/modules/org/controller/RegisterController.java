@@ -32,7 +32,7 @@ import com.thinkgem.jeesite.modules.sys.service.SystemService;
  *
  */
 @Controller
-@RequestMapping("${adminPath}/register")
+@RequestMapping("${frontPath}/register")
 public class RegisterController extends BaseController {
 
 	@Autowired

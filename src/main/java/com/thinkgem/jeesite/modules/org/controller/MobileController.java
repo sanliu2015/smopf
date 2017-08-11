@@ -21,7 +21,7 @@ import com.thinkgem.jeesite.common.web.BaseController;
  *
  */
 @Controller
-@RequestMapping("${adminPath}/mobile")
+@RequestMapping("${frontPath}/mobile")
 public class MobileController extends BaseController {
 
 	@RequestMapping(value = "getMobileCheckCode")

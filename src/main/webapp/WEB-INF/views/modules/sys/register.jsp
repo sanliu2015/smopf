@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="${ctxStatic}/org/css/style.css" />
     
     <link rel="stylesheet" type="text/css" href="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.css" />
-    <script type="text/javascript" src="${ctxStatic}/org/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/jquery/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="${ctxStatic}/jquery-form/jquery.form.min.js"></script>
     <script type="text/javascript" src="${ctxStatic}/layer/3.0.3/layer.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.js"></script>
@@ -25,6 +25,7 @@
 	</style>
     <script type="text/javascript">
       var ctx = "${ctx}";
+      var ctxFront = "${ctxFront}";
       jQuery.validator.addMethod("isMobile", function(value, element) {
         var length = value.length;
         var mobile = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
@@ -51,7 +52,7 @@
                         isMobile:true,
                         remote: {
                         	type:"POST",
-                        	url:"${ctx}/register/checkMobileRegister",
+                        	url:"${ctxFront}/register/checkMobileRegister",
                         	data:{
                                 mobile:function(){return $("#contactMobile").val();}
                             } 
@@ -92,7 +93,7 @@
                 },
 				submitHandler: function(form){
 					$('#inputForm').ajaxSubmit({
-						url : "${ctx}/register/submit",  
+						url : "${ctxFront}/register/submit",  
 						type : "post",  
 						dataType : "json", 
 						beforeSend : function(XMLHttpRequest) {
@@ -101,8 +102,9 @@
 						success:function(responseText, statusText, xhr, $form){
 							layer.closeAll('loading');
 							if(responseText.sucFlag == 1){  
-				                layer.msg('注册成功!', {icon: 1});  
-				                //window.location.href = "${ctx}/fund/remitDirective/form";
+								layer.msg('注册成功!', {icon: 1,time: 1000,end : function(){
+		                			window.location.href = "${ctxFront}/login";
+		                		}});  
 				            }else{
 				            	layer.alert(data.responseText, {icon: 0});  
 				                //layer.msg(responseText.message, {icon: 0});  
@@ -128,7 +130,7 @@
 		// 如果在框架或在对话框中，则弹出提示并跳转到首页
 		if(self.frameElement && self.frameElement.tagName == "IFRAME" || $('#left').length > 0 || $('.jbox').length > 0){
 			alert('未登录或登录超时。请重新登录，谢谢！');
-			top.location = "${ctx}";
+			top.location = "${ctxFront}";
 		}
 		
 		
@@ -152,7 +154,7 @@
     <div class="bg">
         <div class="w1130 mgCenter mainBox">
             <div class="mainTitle">机构注册</div>
-            <form:form id="inputForm" modelAttribute="register" action="${ctx}/register/submit" method="post" >
+            <form:form id="inputForm" modelAttribute="register" action="${ctxFront}/register/submit" method="post" >
             <div class="contentSub pt50">
                 <div class="yui-form-cell mb30 clear">
                     <div class="cell-left w400"><span class="ml15 red">*</span>组织机构代码：</div>
@@ -223,7 +225,7 @@
         </div>
     </div>
     
-    <script src="${ctxStatic}/org/js/foot.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/org/js/foot.js"></script>
     <script type="text/javascript" src="${ctxStatic}/org/js/yui.js"></script>
     <script type="text/javascript" src="${ctxStatic}/org/js/main.js?v201707251400"></script>
 	<script type="text/javascript">

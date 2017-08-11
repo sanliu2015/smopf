@@ -73,6 +73,10 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>sitemeshFilter</filter-name>
+		<url-pattern>/a/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>sitemeshFilter</filter-name>
 		<url-pattern>/org/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>

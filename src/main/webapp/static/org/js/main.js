@@ -90,13 +90,12 @@ $(function () {
             	return false;
             } else {
             	$.ajax({
-            		url: ctx + "/register/getMobileCheckCode",
+            		url: ctxFront + "/register/getMobileCheckCode",
 					type: "post",
 					cache: false,
 					dataType: "json",
 					data:{"mobile":$("#contactMobile").val()},
 			        success:function(resp){  
-			        	debugger;
 			            if(resp.sucFlag == "1"){  
 			            	layer.msg('验证码已发送，请注意查收');
 			            	// 计时开始
@@ -146,36 +145,23 @@ $(function () {
     })
     
     /*审核不通过原因*/
-    $('.nopass1').on('click',function(){
+    $('.nopass').on('click',function(){
+    	$(this).parent().next('.reason').find("textarea").val("");
         if($(this).parent('.yui-checkbox').hasClass('yui-checked')){
-            
+            $(this).parent().next('.reason').addClass('hide'); 
         }else{
-            layer.tips('请写下理由不通过', '.nopass1', {
-              tips: [3, '#f7f7f7'],
-              time: 4000
-            });
+            $(this).parent().next('.reason').removeClass('hide'); 
         }
-    })
-    $('.nopass2').on('click',function(){
-        if($(this).parent('.yui-checkbox').hasClass('yui-checked')){
-            
+    });
+    
+    $('.iconfont').on('click',function(){
+    	$(this).parent().parent().next('.reason').find("textarea").val("");
+        if($(this).parent().parent('.yui-checkbox').hasClass('yui-checked')){
+            $(this).parent().parent().next('.reason').addClass('hide'); 
         }else{
-            layer.tips('请写下理由不通过', '.nopass2', {
-              tips: [3, '#f7f7f7'],
-              time: 4000
-            });
+            $(this).parent().parent().next('.reason').removeClass('hide'); 
         }
-    })
-    $('.nopass3').on('click',function(){
-        if($(this).parent('.yui-checkbox').hasClass('yui-checked')){
-            
-        }else{
-            layer.tips('请写下理由不通过', '.nopass3', {
-              tips: [3, '#f7f7f7'],
-              time: 4000
-            });
-        }
-    })
+    });
     /*点击下载*/
     $('.downLoad').on('click',function(){
         var dataUrl = $(this).parent().prev('img').attr('src');

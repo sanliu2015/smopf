@@ -28,7 +28,7 @@
 	            	return false;
 	            } else {
 	            	$.ajax({
-	            		url: "${ctx}/register/getMobileCheckCode",
+	            		url: "${ctxFront}/mobile/getMobileCheckCode?busType=oe",
 						type: "post",
 						cache: false,
 						dataType: "json",
@@ -74,7 +74,7 @@
 	            	return false;
 	            } else {
 	            	$.ajax({
-	            		url: "${ctx}/register/getMobileCheckCode",
+	            		url: "${ctxFront}/mobile/getMobileCheckCode?busType=oe",
 						type: "post",
 						cache: false,
 						dataType: "json",
@@ -121,7 +121,7 @@
                     contactMobile:{
                         required:true,
                         isMobile:true,
-                        remote: "${ctx}/organizationInfo/checkMobile"
+                        remote: "${ctxFront}/organizationInfo/checkMobile?id=$('#adminId').val()"
                     },
                     validateCode:{
                         required:true,
@@ -151,7 +151,7 @@
                 },
 				submitHandler: function(form){
 					$('#inputForm').ajaxSubmit({
-						url : "${ctx}/organizationInfo/save",  
+						url : "${ctxFront}/organizationInfo/save",  
 						type : "post",  
 						dataType : "json", 
 						beforeSerialize : function($form, options) {
@@ -169,7 +169,7 @@
 							layer.closeAll('loading');
 							if(responseText.sucFlag == 1){  
 				                layer.msg('修改成功!', {icon: 1,time: 1000,end : function(){
-				                		window.location.href = "${ctx}/organizationInfo/index?module=2";
+				                		window.location.href = "${ctxFront}/organizationInfo/index?module=2";
 				                	}
 				                });  
 				            }else{
@@ -197,7 +197,7 @@
 	</script>
 </head>
 <body>
-<form:form id="inputForm" modelAttribute="register" action="${ctx}/organizationInfo/save" method="post" >
+<form:form id="inputForm" modelAttribute="register" action="${ctxFront}/organizationInfo/save" method="post" >
 <input type="hidden" name="orgCode" id="orgCode" value="${organMap.orgCode}"/>
 <input type="hidden" name="contactMobileOld" id="contactMobileOld" value="${organMap.adminMobile}"/>
 <input type="hidden" name="adminId" id="adminId" value="${organMap.adminId}"/>

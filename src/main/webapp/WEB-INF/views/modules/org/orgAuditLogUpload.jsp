@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
@@ -10,25 +11,25 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/org/css/style.css" />
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/layui/css/layui.css" />
 	<!-- js -->
-	<script type="text/javascript" src="${pageContext.request.contextPath}/static/org/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/jquery/jquery-2.2.4.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/static/org/js/yui.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/static/org/js/main.js?v201707251300"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/static/layui/layui.js"></script>
 	<script type="text/javascript">
 		function submitAudit() {
 			$.ajax({
-        		url: "${ctx}/orgAuditLog/submitAudit",
+        		url: "${ctxFront}/orgAuditLog/submitAudit",
 				type: "post",
 				cache: false,
 				dataType: "json",
 		        success:function(resp){  
 		            if(resp.sucFlag == "1"){  
 		            	layer.msg('审核资料提交成功!', {icon: 1,time: 1000,end : function(){
-	                			window.location.href = "${ctx}/orgAuditLog/list?module=1";
+	                			window.location.href = "${ctxFront}/orgAuditLog/list?module=1";
 	                		}
 	                	});  
 		            }else{  
-		                layer.alert(resp.message, {icon: 0});  
+		                layer.alert(resp.msg, {icon: 0});  
 		            }  
 		        },  
 		        error:function(data) {
@@ -45,8 +46,8 @@
         <div class="clear mgCenter w1190">
            <a href="javascript:void(0)" class="adv fl">好买机构数据申报平台</a>
            <div class="fr headBoxR f20">
-                <a href="javascript:void(0)" class="backSystem"><i class="iconfont">&#xe610;</i><span>退出系统</span></a>
-                <a href="javascript:void(0)" class="manager"><small></small>管理员-好买买</a>
+           		<a href="${ctxFront}/logout" class="backSystem"><i class="iconfont">&#xe610;</i><span>退出系统</span></a>
+                <a href="javascript:void(0)" class="manager"><small></small>${fns:getUser().userType == 'FADM' ? '管理员-':''}${fns:getUser().name}</a>
            </div>
         </div>
     </div>
@@ -55,8 +56,8 @@
             <div class="mainTitle">资质审核</div>
             <div class="downloadBox tac">
                 <ul class="clear">
-                    <li><a href="javascript:void(0)"><span>产品净值保证函模板下载</span></a></li>
-                    <li><a href="javascript:void(0)"><span>产品披露授权函模板下载</span></a></li>
+                    <li><a href="${ctxFront}/downloadNative?fileName=产品净值保证函模板.jpg&filePath=/static/templateDownload/产品净值保证函模板.jpg"><span>产品净值保证函模板下载</span></a></li>
+                    <li><a href="${ctxFront}/downloadNative?fileName=产品净值保证函模板.jpg&filePath=/static/templateDownload/产品披露授权函模板.jpg"><span>产品披露授权函模板下载</span></a></li>
                 </ul>
             </div>
             
@@ -79,7 +80,7 @@
                     </c:if>
                 </ul>
                 <div class="notice tac">注意：上传文件为图片或PDF格式，请务必限制在5MB以内</div>
-                <a href="javascript:void(0)" class="btn-style-a db w350 mt50 mgCenter" click="submitAudit();">提 交</a>
+                <a href="javascript:void(0)" class="btn-style-a db w350 mt50 mgCenter" onclick="submitAudit();">提 交</a>
             </div>
             
         </div>
@@ -91,7 +92,7 @@
 layui.use(['layer', 'upload'], function(){
 	  var layer = layui.layer;
 	  layui.upload({
-	    	url: '${ctx}/orgAuditLog/upload',
+	    	url: '${ctxFront}/orgAuditLog/upload',
 	    	elem: '.layui-upload-file', //指定原始元素，默认直接查找class="layui-upload-file"
 	    	ext: 'jpg|png|pdf',
 	    	method: 'post', //上传接口的http类型
@@ -101,11 +102,17 @@ layui.use(['layer', 'upload'], function(){
 	    		$(input).after("<input type='hidden' name='itemCode' value='" + $(input).attr("id") + "' />");
 	    	},
 	    	success: function(res, input){
+	    		debugger;
 	    		layer.closeAll('loading');
 	    		if (res.sucFlag == "1") {
-	    			layer.msg('上传成功!', {icon: 1}); 
+	    			$(input).parent().find("p").remove();
+	    			layer.msg('上传成功!', {icon: 1,time: 1000,end: function(){
+	    					$(input).before('<p class="clear mt10"><b style="text-align:center;color:#FF6347">上传成功</b></p>');
+            			}
+	    			}); 
 	    			//$(input).parent().parent().find("span").text();
 	    		} else {
+	    			debugger;
 	    			layer.alert(res.msg, {icon: 0});  
 	    			//$(input).remove();
 	    			//$(input).parent().parent().find("span").text();

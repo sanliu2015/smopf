@@ -18,6 +18,7 @@ import com.thinkgem.jeesite.common.utils.FileUtils;
 import com.thinkgem.jeesite.modules.org.dao.OrgAuditLogDao;
 import com.thinkgem.jeesite.modules.org.entity.OrgAttachment;
 import com.thinkgem.jeesite.modules.org.entity.OrgAuditLog;
+import com.thinkgem.jeesite.modules.org.entity.OrganizationInfo;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 @Service
@@ -62,9 +63,61 @@ public class OrgAuditLogService extends CrudService<OrgAuditLogDao, OrgAuditLog>
 		
 	}
 
-	public void submitAudit() {
-//		dao.submitAudit
+	public void submitAudit(OrganizationInfo organizationInfo) {
+		Date currentDate = new Date();
+		if ("1".equals(organizationInfo.getLicenceStatus())) {		// 已上传
+			OrgAuditLog log = new OrgAuditLog();
+			log.setStatus("0");
+			log.setItemCode("1");	// 营业执照
+			log.setCredt(currentDate);
+			log.setModdt(currentDate);
+			log.setOrgCode(organizationInfo.getCode());
+			super.save(log);
+		}
 		
+		if ("1".equals(organizationInfo.getLogStatus())) {		
+			OrgAuditLog log = new OrgAuditLog();
+			log.setStatus("0");
+			log.setItemCode("2");	// 产品净值保证函
+			log.setCredt(currentDate);
+			log.setModdt(currentDate);
+			log.setOrgCode(organizationInfo.getCode());
+			super.save(log);
+		}
+		
+		if ("1".equals(organizationInfo.getLoaStatus())) {		
+			OrgAuditLog log = new OrgAuditLog();
+			log.setStatus("0");
+			log.setItemCode("3");	// 授权函
+			log.setCredt(currentDate);
+			log.setModdt(currentDate);
+			log.setOrgCode(organizationInfo.getCode());
+			super.save(log);
+		}
+		
+		OrgAuditLog log = new OrgAuditLog();
+		log.setStatus("0");
+		log.setItemCode("0");
+		log.setCredt(currentDate);
+		log.setModdt(currentDate);
+		log.setOrgCode(organizationInfo.getCode());
+		super.save(log);
+		
+		dao.updateStatus(organizationInfo);
+		
+		
+	}
+
+	public List<Map<String, Object>> queryAuditLog(OrgAuditLog auditLog) {
+		return dao.queryAuditLog(auditLog);
+	}
+
+	public OrgAuditLog getOrganAuditLog(OrgAuditLog orgAuditLog) {
+		return dao.getOrganAuditLog(orgAuditLog);
+	}
+
+	public void auditLog(OrgAuditLog orgAuditLog) {
+		dao.auditLog(orgAuditLog);
 	}
 
 }

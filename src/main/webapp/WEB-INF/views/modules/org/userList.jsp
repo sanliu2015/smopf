@@ -24,7 +24,7 @@
 					<td>${fns:getDictLabel(user.userType, 'sys_user_type', '')}</td>
 					<td>${user.email}</td>
 					<td>${user.mobile}</td>
-					<td>${fns:getDictLabel(user.delFlag, 'del_flag', '')}</td>
+					<td>${fns:getDictLabel(user.loginFlag, 'login_flag', '')}</td>
 					<td>
 						<c:choose>
 							<c:when test="${user.userType == 'FADM'}">
@@ -32,11 +32,11 @@
 							</c:when>
 							<c:otherwise>
 								<c:choose>
-									<c:when test="${user.delFlag == '1'}">
-										<a href="javascript:void(0)" class="fwb operateBtn" onclick="update('${user.id}',0)">重新添加</a>
+									<c:when test="${user.loginFlag == '0'}">
+										<a href="javascript:void(0)" class="fwb operateBtn" onclick="update('${user.id}',1)">解冻</a>
 									</c:when>
 									<c:otherwise>
-										<a href="javascript:void(0)" class="fwb operateBtn" onclick="update('${user.id}',1)">删除</a>
+										<a href="javascript:void(0)" class="fwb operateBtn" onclick="update('${user.id}',0)">冻结</a>
 									</c:otherwise>
 								</c:choose>
 							</c:otherwise>
@@ -45,21 +45,21 @@
 				</tr>	
 				</c:forEach>				
 			</table>
-			<a href="${ctx}/organizationInfo/addUser?module=3" class="btn-style-a db mt50 w340 mgCenter">添加机构账号</a>
+			<a href="${ctxFront}/organizationInfo/addUser?module=3" class="btn-style-a db mt50 w340 mgCenter">添加机构账号</a>
 		</div>
 	</div>
 <script type="text/javascript">
-	function update(userId,delFlag) {
+	function update(userId,loginFlag) {
 		$.ajax({
-    		url: "${ctx}/organizationInfo/updateUser",
+    		url: "${ctxFront}/organizationInfo/updateUser",
 			type: "post",
 			cache: false,
 			dataType: "json",
-			data:{"userId":userId,"delFlag":delFlag},
+			data:{"userId":userId,"loginFlag":loginFlag},
 	        success:function(resp){  
 	            if(resp.sucFlag == "1"){  
 	            	layer.msg('操作成功!', {icon: 1,time: 1000,end: function(){
-	                		window.location.href = "${ctx}/organizationInfo/userList?module=3";
+	                		window.location.href = "${ctxFront}/organizationInfo/userList?module=3";
 	                	}
 	                });  
 	            }else{  

@@ -10,7 +10,7 @@
     <div class="w1000">
         <div class="contentSub pt30">
         	<c:if test="${empty list}">
-        		<a href="${ctx}/orgAuditLog/uploadInit" class="btn-style-a db w350 mt20 ml250">资质上传</a>
+        		<a href="${ctxFront}/orgAuditLog/uploadInit" class="btn-style-a db w350 mt20 ml250">资质上传</a>
         	</c:if>
         	<c:if test="${not empty list}">
             <table class="yui-table tac" data-zebra="odd">
@@ -34,7 +34,7 @@
                     <c:when test="${obj.status eq '2'}">
                     	<td><span class="red">${fns:getDictLabel(obj.status, 'audit_status', '')}</span></td>
 	                    <td>${obj.msg}</td>
-	                    <td><a href="资质审核.html" class="reUpload fwb">重新上传</a></td>
+	                    <td><a href="${ctxFront}/orgAuditLog/uploadInit" class="reUpload fwb">重新上传</a></td>
                     </c:when>	
                     <c:otherwise>
                     	<td>${fns:getDictLabel(obj.status, 'audit_status', '')}</td>
