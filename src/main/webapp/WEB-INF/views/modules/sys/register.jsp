@@ -106,7 +106,7 @@
 		                			window.location.href = "${ctxFront}/login";
 		                		}});  
 				            }else{
-				            	layer.alert(data.responseText, {icon: 0});  
+				            	layer.alert(responseText.message, {icon: 0});  
 				                //layer.msg(responseText.message, {icon: 0});  
 				            }  
 						},

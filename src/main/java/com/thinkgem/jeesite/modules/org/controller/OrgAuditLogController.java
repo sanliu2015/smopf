@@ -81,7 +81,6 @@ public class OrgAuditLogController extends BaseController {
 			respMap.put("msg", "资质审核已通过，不需要再次提交！");
 			return respMap;
 		} else {
-			
 			StringBuilder msg = new StringBuilder();
 			boolean errorFlag = false;
 			if ("0".equals(organizationInfo.getLicenceStatus()) || "2".equals(organizationInfo.getLicenceStatus())) {
