@@ -227,7 +227,7 @@
     
     <script type="text/javascript" src="${ctxStatic}/org/js/foot.js"></script>
     <script type="text/javascript" src="${ctxStatic}/org/js/yui.js"></script>
-    <script type="text/javascript" src="${ctxStatic}/org/js/main.js?v201707251400"></script>
+    <script type="text/javascript" src="${ctxStatic}/org/js/main.js?v201708111100"></script>
 	<script type="text/javascript">
 		function refreshCode() {
 			$("#checkCode").attr("src", "${pageContext.request.contextPath}/servlet/validateCodeServlet?"+new Date().getTime());
