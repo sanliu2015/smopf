@@ -24,7 +24,14 @@ public interface OrganizationInfoDao extends CrudDao<OrganizationInfo> {
 
 	List<User> findUserList(String orgCode);
 
-	int updateUserStatus(Map<String, Object> paraMap);
+	int updateUserByDelete(Map<String, Object> paraMap);
 
-	OrganizationInfo findObject(String orgCode);
+	OrganizationInfo findOrgan(String orgCode);
+
+	List<Map<String, Object>> queryOtherUserByMobile(User user);
+
+	User findUser(Map<String, Object> paraMap);
+
+	void updateOrgInfoAdmin(User user);
+
 }

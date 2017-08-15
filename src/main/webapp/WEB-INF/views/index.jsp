@@ -99,7 +99,7 @@
                     <dd>5、填写完毕后将自动进入待审核状态，一般会在1-2个工作日之内进行审核；</dd>
                 </dl>
             </div>
-            <form class="fr adverLogin mt40" id="loginForm" action="${ctxFront}/login" method="post">
+            <form class="fr adverLogin mt40" id="loginForm" action="${ctx}/login" method="post">
                 <h4>好买机构数据申报平台</h4>
                 <div class="yui-form-cell mt30 mb20 clear">
                     <label class="cell-left f14 w50 tar pr10" for="username">用户名</label>
@@ -123,7 +123,7 @@
                                 <label><i class="iconfont">&#xe606;</i></label><input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}><span>记住密码</span>
                             </div>
                             <div class="yui-checkbox mt6 fr bcInfo">
-                                <a href="${ctxFront}/register/resetPassword" target="_blank">忘记密码/修改密码？</a>
+                                <a href="${ctx}/register/resetPassword" target="_blank">忘记密码/修改密码？</a>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                 	<label id="loginError" class="error">${message}</label>
                 </div>
                 <a href="javascript:void(0)" onclick="login();" class="btn-style-a mt20 db">登 录</a>
-                <div class="bcInfo tac mt15">没有账户 去<a href="${pageContext.request.contextPath}${fns:getFrontPath()}/register">注册</a></div>
+                <div class="bcInfo tac mt15">没有账户 去<a href="${ctx}/register">注册</a></div>
             </form>
         </div>
     </div>

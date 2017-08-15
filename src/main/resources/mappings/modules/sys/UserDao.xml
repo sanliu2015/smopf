@@ -343,4 +343,10 @@
 		WHERE id = #{id}
 	</update>
 	
+	<update id="updateUserType">
+		UPDATE sys_user SET 
+			user_type = #{userType} 
+		WHERE id = #{id}
+	</update>
+	
 </mapper>

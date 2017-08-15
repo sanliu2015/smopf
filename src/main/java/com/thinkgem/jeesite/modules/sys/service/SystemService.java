@@ -390,6 +390,20 @@ public class SystemService extends BaseService {
 		return true;
 		
 	}
+
+	/**
+	 * 更新用户的用户角色
+	 * @param user
+	 */
+	public void updateUserRole(User user) {
+		userDao.deleteUserRole(user);
+		userDao.updateUserType(user);
+		if (user.getRoleList() != null && user.getRoleList().size() > 0){
+			userDao.insertUserRole(user);
+		}else{
+			throw new ServiceException(user.getLoginName() + "没有设置角色！");
+		}
+	}
 	
 	
 	

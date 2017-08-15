@@ -31,7 +31,7 @@ import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
  */
 
 @Controller
-@RequestMapping("${frontPath}/orgAuditLog")
+@RequestMapping("${adminPath}/orgAuditLog")
 public class OrgAuditLogController extends BaseController {
 	
 	@Autowired
@@ -50,7 +50,7 @@ public class OrgAuditLogController extends BaseController {
 	
 	@RequestMapping(value = "uploadInit")
 	public String uploadInit(HttpServletRequest request, HttpServletResponse response) {
-		OrganizationInfo organizationInfo = organizationInfoService.findObject(UserUtils.getUser().getOrgCode());
+		OrganizationInfo organizationInfo = organizationInfoService.findOrgan(UserUtils.getUser().getOrgCode());
 		request.setAttribute("organ", organizationInfo);
 		return "modules/org/orgAuditLogUpload";
 	}
@@ -75,7 +75,7 @@ public class OrgAuditLogController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> submitAudit(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> respMap = new HashMap<String, Object>();
-		OrganizationInfo organizationInfo = organizationInfoService.findObject(UserUtils.getUser().getOrgCode());
+		OrganizationInfo organizationInfo = organizationInfoService.findOrgan(UserUtils.getUser().getOrgCode());
 		if ("1".equals(organizationInfo.getStatus())) {
 			respMap.put("sucFlag", "0");
 			respMap.put("msg", "资质审核已通过，不需要再次提交！");
@@ -104,7 +104,6 @@ public class OrgAuditLogController extends BaseController {
 				orgAuditLogService.submitAudit(organizationInfo);
 				respMap.put("sucFlag", "1");
 			}
-			
 			
 		}
 

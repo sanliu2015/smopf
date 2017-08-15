@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Maps;
 import com.thinkgem.jeesite.common.service.CrudService;
 import com.thinkgem.jeesite.modules.org.dao.OrganizationInfoDao;
 import com.thinkgem.jeesite.modules.org.entity.OrganizationInfo;
@@ -36,29 +37,57 @@ public class OrganizationInfoService extends CrudService<OrganizationInfoDao, Or
 	public List<Map<String, Object>> queryUserByMobile(String mobile) {
 		return dao.queryUserByMobile(mobile);
 	}
-
-	@Transactional(readOnly = false)
-	public void updateOrgInfo(Register register) {
-		dao.updateOrgInfo(register);
-		dao.updateAdminUser(register);
+	
+	@Transactional(readOnly = true)
+	public List<Map<String, Object>> queryOtherUserByMobile(User user) {
+		return dao.queryOtherUserByMobile(user);
 	}
 
+	@SuppressWarnings("static-access")
 	@Transactional(readOnly = false)
-	public void updateWithNewMobile(Register register) {
-		if (StringUtils.isNotBlank(register.getPassword())) {
-			register.setPassword(SystemService.entryptPassword(register.getPassword()));
+	public void updateWithNewMobile(Register register, Map<String, Object> respMap) {
+		Map<String, Object> paraMap = Maps.newHashMap();
+		paraMap.put("id", UserUtils.getUser().getId());
+		paraMap.put("mobile", register.getContactMobile());
+		paraMap.put("orgCode", UserUtils.getUser().getOrgCode());
+		User user = dao.findUser(paraMap);
+		if (user == null) {	// 表示新手机号
+			dao.updateOrgInfo(register);
+			register.setPassword(systemService.entryptPassword(register.getPassword()));
+			dao.updateAdminUserWithMobile(register);
+		} else {
+			if (!user.getOrgCode().equals(paraMap.get("orgCode"))) {
+				respMap.put("sucFlag", "0");
+				respMap.put("message", "此手机号已经被其他机构注册使用");
+				return ;
+			}
+			paraMap.put("delFlag", "1");
+			paraMap.put("userId", UserUtils.getUser().getId());
+			dao.updateUserByDelete(paraMap);		// 当前账号置为删除
+			
+			Role role = systemService.getRoleByEnname("orgAdmin");
+			List<Role> roleList = new ArrayList<Role>(1);
+			roleList.add(role);
+			user.setRoleList(roleList);
+			user.setUserType("FADM");
+			systemService.updateUserRole(user);
+			systemService.updatePasswordById(user.getId(), register.getContactMobile(), register.getPassword());
+			dao.updateOrgInfoAdmin(user);
+			
+			//UserUtils.clearCache(user);
 		}
-		dao.updateOrgInfo(register);
-		dao.updateAdminUser(register);
-		dao.updateAdminUserWithMobile(register);
+		
+		UserUtils.clearCache(UserUtils.getUser());		
+		UserUtils.getSubject().logout();// 当前用户退出
+		
 	}
 
 	public List<User> findUserList(String orgCode) {
 		return dao.findUserList(orgCode);
 	}
 
-	public int updateUserStatus(Map<String, Object> paraMap) {
-		return dao.updateUserStatus(paraMap);
+	public int updateUserByDelete(Map<String, Object> paraMap) {
+		return dao.updateUserByDelete(paraMap);
 	}
 
 	public void saveUser(Map<String, String> paraMap) {
@@ -92,8 +121,17 @@ public class OrganizationInfoService extends CrudService<OrganizationInfoDao, Or
 		
 	}
 
-	public OrganizationInfo findObject(String orgCode) {
-		return dao.findObject(orgCode);
+	public OrganizationInfo findOrgan(String orgCode) {
+		return dao.findOrgan(orgCode);
+	}
+
+	public void updateWithOldMobile(Register register) {
+		dao.updateOrgInfo(register);
+		dao.updateAdminUser(register);
+	}
+
+	public User findUser(Map<String, Object> paraMap) {
+		return dao.findUser(paraMap);
 	}
 
 

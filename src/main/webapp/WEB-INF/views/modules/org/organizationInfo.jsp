@@ -40,7 +40,7 @@
 	            </div>
 	        </div>
 	        
-	        <a href="${ctxFront}/organizationInfo/edit?module=2" class="btn-style-a db w350 mt20 ml250">修 改</a>
+	        <a href="${ctx}/organizationInfo/edit?module=2" class="btn-style-a db w350 mt20 ml250">修 改</a>
 	    </div>
 	</div>
 </body>

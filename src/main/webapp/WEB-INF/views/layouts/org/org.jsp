@@ -14,7 +14,7 @@
         <div class="clear w1240">
            <a href="javascript:void(0)" class="adv ml25 fl">好买机构数据申报平台</a>
            <div class="fr headBoxR f20">
-                <a href="${ctxFront}/logout" class="backSystem"><i class="iconfont">&#xe610;</i><span>退出系统</span></a>
+                <a href="${ctx}/logout" class="backSystem"><i class="iconfont">&#xe610;</i><span>退出系统</span></a>
                 <a href="javascript:void(0)" class="manager"><small></small>${fns:getUser().userType == 'FADM' ? '管理员-':''}${fns:getUser().name}</a>
            </div>
         </div>
@@ -25,9 +25,11 @@
            <dd class="hide"></dd>
            <dt><i class="iconfont f16">&#xe605;</i>账户管理</dt>
            <dd>
-               <a href="${ctxFront}/orgAuditLog/list?module=1" ${module == 1 ? 'class="active"' : ''}><i class="iconfont f12">&#xe604;</i>审核状态</a>
-               <a href="${ctxFront}/organizationInfo/index?module=2" ${module == 2 ? 'class="active"' : ''}><i class="iconfont f12">&#xe604;</i>机构信息</a>
-               <a href="${ctxFront}/organizationInfo/userList?module=3" ${module == 3 ? 'class="active"' : ''}><i class="iconfont f12">&#xe604;</i>账号维护</a>
+               <a href="${ctx}/orgAuditLog/list?module=1" ${module == 1 ? 'class="active"' : ''}><i class="iconfont f12">&#xe604;</i>审核状态</a>
+               <a href="${ctx}/organizationInfo/index?module=2" ${module == 2 ? 'class="active"' : ''}><i class="iconfont f12">&#xe604;</i>机构信息</a>
+               <c:if test="${fns:getUser().userType == 'FADM'}">
+               <a href="${ctx}/organizationInfo/userList?module=3" ${module == 3 ? 'class="active"' : ''}><i class="iconfont f12">&#xe604;</i>账号维护</a>
+           	   </c:if>
            </dd>
         </dl>
 		

@@ -28,7 +28,7 @@
 	            	return false;
 	            } else {
 	            	$.ajax({
-	            		url: "${ctxFront}/mobile/getMobileCheckCode?busType=oe",
+	            		url: "${ctx}/mobile/getMobileCheckCode?busType=oe",
 						type: "post",
 						cache: false,
 						dataType: "json",
@@ -74,7 +74,7 @@
 	            	return false;
 	            } else {
 	            	$.ajax({
-	            		url: "${ctxFront}/mobile/getMobileCheckCode?busType=oe",
+	            		url: "${ctx}/mobile/getMobileCheckCode?busType=oe",
 						type: "post",
 						cache: false,
 						dataType: "json",
@@ -121,7 +121,7 @@
                     contactMobile:{
                         required:true,
                         isMobile:true,
-                        remote: "${ctxFront}/organizationInfo/checkMobile?id=$('#adminId').val()"
+                        remote: "${ctx}/organizationInfo/checkMobileOnEdit"
                     },
                     validateCode:{
                         required:true,
@@ -151,13 +151,17 @@
                 },
 				submitHandler: function(form){
 					$('#inputForm').ajaxSubmit({
-						url : "${ctxFront}/organizationInfo/save",  
+						url : "${ctx}/organizationInfo/save",  
 						type : "post",  
 						dataType : "json", 
 						beforeSerialize : function($form, options) {
 							if ($("#contactMobile").val() != orgMobile) {
 								if ($("#mobileCheckCodeNew").val() == "") {
 									layer.alert('新手机验证码不能为空!', {icon: 0});
+									return false;
+								}
+								if ($("#password").val() == "") {
+									layer.alert('新手机密码不能为空!', {icon: 0});
 									return false;
 								}
 							}
@@ -169,7 +173,7 @@
 							layer.closeAll('loading');
 							if(responseText.sucFlag == 1){  
 				                layer.msg('修改成功!', {icon: 1,time: 1000,end : function(){
-				                		window.location.href = "${ctxFront}/organizationInfo/index?module=2";
+				                		window.location.href = "${ctx}/organizationInfo/index?module=2";
 				                	}
 				                });  
 				            }else{
@@ -197,7 +201,7 @@
 	</script>
 </head>
 <body>
-<form:form id="inputForm" modelAttribute="register" action="${ctxFront}/organizationInfo/save" method="post" >
+<form:form id="inputForm" modelAttribute="register" action="${ctx}/organizationInfo/save" method="post" >
 <input type="hidden" name="orgCode" id="orgCode" value="${organMap.orgCode}"/>
 <input type="hidden" name="contactMobileOld" id="contactMobileOld" value="${organMap.adminMobile}"/>
 <input type="hidden" name="adminId" id="adminId" value="${organMap.adminId}"/>

@@ -15,7 +15,11 @@
 	</select>
 	
 	<select id="queryUserByMobile" resultType="java.util.Map">
-		select id as "id" from sys_user where mobile=#{mobile}
+		select id as "id" from sys_user where mobile=#{mobile} and del_flag='0' and login_flag='1'
+	</select>
+	
+	<select id="queryOtherUserByMobile" resultType="java.util.Map">
+		select id as "id" from sys_user where mobile=#{mobile} and id !=#{id} and  del_flag='0' and login_flag='1' 
 	</select>
 	
 	<insert id="insert">
@@ -61,6 +65,12 @@
 		WHERE id=#{adminId}
 	</update>
 	
+	<update id="updateOrgInfoAdmin">
+		UPDATE ORG_ORGANIZATION_INFO SET 
+			user_id=#{id} 
+		WHERE code = #{orgCode}
+	</update>
+	
 	<select id="findUserList" resultType="com.thinkgem.jeesite.modules.sys.entity.User">
 		select a.id as "id", 
 			a.login_name as "loginName",
@@ -77,13 +87,13 @@
 		order by a.create_date 
 	</select>
 	
-	<update id="updateUserStatus">
+	<update id="updateUserByDelete">
 		UPDATE SYS_USER SET 
-			login_flag=#{loginFlag}
+			del_flag=#{delFlag}
 		WHERE id=#{userId}
 	</update>
 	
-	<select id="findObject" resultType="com.thinkgem.jeesite.modules.org.entity.OrganizationInfo">
+	<select id="findOrgan" resultType="com.thinkgem.jeesite.modules.org.entity.OrganizationInfo">
 		select a.id as "id", 
 			a.code as "code",
 			a.name as "name",
@@ -96,6 +106,22 @@
 			a.moddt as "moddt"
 		from org_organization_info a 
 		where a.code=#{orgCode} 
+	</select>
+	
+	<select id="findUser" resultType="com.thinkgem.jeesite.modules.sys.entity.User">
+		select a.id as "id", 
+			a.login_name as "loginName",
+	    	a.no,
+			a.name,
+			a.email,
+			a.phone,
+			a.mobile,
+			a.org_code as "orgCode",
+			a.user_type as "userType",
+			a.login_flag as "loginFlag",
+			a.del_flag as "delFlag"
+			from sys_user a 
+		where a.mobile=#{mobile} and del_flag='0' and login_flag='1' 
 	</select>
 	
 </mapper>

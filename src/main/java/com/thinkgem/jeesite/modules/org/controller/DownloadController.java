@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.thinkgem.jeesite.common.web.BaseController;
 
+@RequestMapping(value="${adminPath}")
 @Controller
-public class FrontBackController extends BaseController {
+public class DownloadController extends BaseController {
 
-	@RequestMapping(value = {"${frontPath}/downloadNative", "${adminPath}/downloadNative"})
+	@RequestMapping(value = "downloadNative")
 	public void downloadNative(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String filePath = request.getParameter("filePath");
 		String fileName = request.getParameter("fileName");

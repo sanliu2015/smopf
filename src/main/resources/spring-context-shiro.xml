@@ -16,12 +16,9 @@
 			<value>
 				/static/** = anon
 				/userfiles/** = anon
+				${adminPath}/register/** = anon
 				${adminPath}/cas = cas
-				${frontPath}/register/** = anon
-				${frontPath}/login = frontAuthc
-				${frontPath}/logout = logout
-				${frontPath}/** = user
-				${adminPath}/login = adminAuthc
+				${adminPath}/login = authc
 				${adminPath}/logout = logout
 				${adminPath}/** = user
 				/act/editor/** = user
@@ -34,28 +31,17 @@
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" /><!-- 
 		<property name="loginUrl" value="${cas.server.url}?service=${cas.project.url}${adminPath}/cas" /> -->
-		<property name="loginUrl" value="${frontPath}/login" />
-		<!-- <property name="successUrl" value="${frontPath}?login" /> -->
+		<property name="loginUrl" value="${adminPath}/login" />
+		<property name="successUrl" value="${adminPath}?login" />
 		<property name="filters">
             <map>
                 <entry key="cas" value-ref="casFilter"/>
-                <entry key="adminAuthc" value-ref="adminFilter"/>
-                <entry key="frontAuthc" value-ref="frontFilter"/>
+                <entry key="authc" value-ref="formAuthenticationFilter"/>
             </map>
         </property>
 		<property name="filterChainDefinitions">
 			<ref bean="shiroFilterChainDefinitions"/>
 		</property>
-	</bean>
-	
-	<bean id="adminFilter" class="com.thinkgem.jeesite.modules.sys.security.AdminFormAuthenticationFilter">
-		<property name="loginUrl" value="${adminPath}/login" />
-		<property name="successUrl" value="${adminPath}?login" />
-	</bean>
-	
-	<bean id="frontFilter" class="com.thinkgem.jeesite.modules.sys.security.FormAuthenticationFilter">
-		<property name="loginUrl" value="${frontPath}/login" />
-		<property name="successUrl" value="${frontPath}?login" />
 	</bean>
 	
 	<!-- CAS认证过滤器 -->  

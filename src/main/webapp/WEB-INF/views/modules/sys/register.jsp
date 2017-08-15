@@ -25,7 +25,6 @@
 	</style>
     <script type="text/javascript">
       var ctx = "${ctx}";
-      var ctxFront = "${ctxFront}";
       jQuery.validator.addMethod("isMobile", function(value, element) {
         var length = value.length;
         var mobile = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
@@ -52,7 +51,7 @@
                         isMobile:true,
                         remote: {
                         	type:"POST",
-                        	url:"${ctxFront}/register/checkMobileRegister",
+                        	url:"${ctx}/register/checkMobileRegister",
                         	data:{
                                 mobile:function(){return $("#contactMobile").val();}
                             } 
@@ -93,7 +92,7 @@
                 },
 				submitHandler: function(form){
 					$('#inputForm').ajaxSubmit({
-						url : "${ctxFront}/register/submit",  
+						url : "${ctx}/register/submit",  
 						type : "post",  
 						dataType : "json", 
 						beforeSend : function(XMLHttpRequest) {
@@ -103,7 +102,7 @@
 							layer.closeAll('loading');
 							if(responseText.sucFlag == 1){  
 								layer.msg('注册成功!', {icon: 1,time: 1000,end : function(){
-		                			window.location.href = "${ctxFront}/login";
+		                			window.location.href = "${ctx}/login";
 		                		}});  
 				            }else{
 				            	layer.alert(responseText.message, {icon: 0});  
@@ -130,7 +129,7 @@
 		// 如果在框架或在对话框中，则弹出提示并跳转到首页
 		if(self.frameElement && self.frameElement.tagName == "IFRAME" || $('#left').length > 0 || $('.jbox').length > 0){
 			alert('未登录或登录超时。请重新登录，谢谢！');
-			top.location = "${ctxFront}";
+			top.location = "${ctx}";
 		}
 		
 		
@@ -154,7 +153,7 @@
     <div class="bg">
         <div class="w1130 mgCenter mainBox">
             <div class="mainTitle">机构注册</div>
-            <form:form id="inputForm" modelAttribute="register" action="${ctxFront}/register/submit" method="post" >
+            <form:form id="inputForm" modelAttribute="register" action="${ctx}/register/submit" method="post" >
             <div class="contentSub pt50">
                 <div class="yui-form-cell mb30 clear">
                     <div class="cell-left w400"><span class="ml15 red">*</span>组织机构代码：</div>

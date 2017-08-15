@@ -90,7 +90,7 @@ $(function () {
             	return false;
             } else {
             	$.ajax({
-            		url: ctxFront + "/register/getMobileCheckCode",
+            		url: ctx + "/register/getMobileCheckCode",
 					type: "post",
 					cache: false,
 					dataType: "json",

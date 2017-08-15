@@ -30,7 +30,7 @@
 	            	return false;
 	            } else {
 	            	$.ajax({
-	            		url: "${ctxFront}/mobile/getMobileCheckCode?busType=ad",
+	            		url: "${ctx}/mobile/getMobileCheckCode?busType=ad",
 						type: "post",
 						cache: false,
 						dataType: "json",
@@ -76,7 +76,7 @@
                         isMobile:true,
                         remote: {
                         	type:"POST",
-                        	url:"${ctxFront}/register/checkMobileRegister",
+                        	url:"${ctx}/register/checkMobileRegister",
                         	data:{
                                 mobile:function(){return $("#mobile").val();}
                             } 
@@ -103,7 +103,7 @@
                 },
 				submitHandler: function(form){
 					$('#inputForm').ajaxSubmit({
-						url : "${ctxFront}/organizationInfo/saveUser",  
+						url : "${ctx}/organizationInfo/saveUser",  
 						type : "post",  
 						dataType : "json", 
 						beforeSend : function(XMLHttpRequest) {
@@ -113,7 +113,7 @@
 							layer.closeAll('loading');
 							if(responseText.sucFlag == 1){  
 				                layer.msg('添加成功!', {icon: 1,time: 1000,end : function(){
-				                		window.location.href = "${ctxFront}/organizationInfo/userList?module=3";
+				                		window.location.href = "${ctx}/organizationInfo/userList?module=3";
 				                	}
 				                });  
 				            }else{

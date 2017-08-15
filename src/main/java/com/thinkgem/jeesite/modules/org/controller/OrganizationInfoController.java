@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.common.collect.Maps;
 import com.thinkgem.jeesite.common.servlet.ValidateCodeServlet;
 import com.thinkgem.jeesite.common.utils.JedisUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
@@ -29,7 +30,7 @@ import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
  *
  */
 @Controller
-@RequestMapping("${frontPath}/organizationInfo")
+@RequestMapping("${adminPath}/organizationInfo")
 public class OrganizationInfoController extends BaseController {
 
 	@Autowired
@@ -72,6 +73,28 @@ public class OrganizationInfoController extends BaseController {
 	}
 	
 	/**
+	 * 同1个结构下子账号可以不验证
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "checkMobileOnEdit")
+	@ResponseBody
+	public boolean checkMobileOnEdit(HttpServletRequest request, HttpServletResponse response) {
+		String mobile = request.getParameter("contactMobile");
+		Map<String, Object> paraMap = Maps.newHashMap();
+		paraMap.put("id", UserUtils.getUser().getId());
+		paraMap.put("mobile", mobile);
+		paraMap.put("orgCode", UserUtils.getUser().getOrgCode());
+		User user = organizationInfoService.findUser(paraMap);
+		if (user == null || user.getOrgCode().equals(UserUtils.getUser().getOrgCode())) {	// 同一机构下的
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
 	 * 前台页面修改机构信息
 	 * @param register
 	 * @param request
@@ -103,9 +126,7 @@ public class OrganizationInfoController extends BaseController {
 		
 		// 如果手机号不一致
 		if (!register.getContactMobileOld().equals(register.getContactMobile())) {
-			
 			Object newMobileMap = JedisUtils.getObject("oe" + register.getContactMobile());
-			
 			if (newMobileMap == null) {
 				respMap.put("sucFlag", "0");
 				respMap.put("message", "新手机号验证码已过期！");
@@ -116,9 +137,9 @@ public class OrganizationInfoController extends BaseController {
 				respMap.put("message", "新手机号验证码不正确！");
 				return respMap;
 			}
-			organizationInfoService.updateWithNewMobile(register);
+			organizationInfoService.updateWithNewMobile(register,respMap);
 		} else {
-			organizationInfoService.updateOrgInfo(register);
+			organizationInfoService.updateWithOldMobile(register);		
 		}
 		
 		// 清除缓存
@@ -139,16 +160,26 @@ public class OrganizationInfoController extends BaseController {
 		return "modules/org/userList";
 	}
 	
-	@RequestMapping(value = "updateUser")
+	@RequestMapping(value = "updateUserByDelete")
 	@ResponseBody
-	public Map<String, Object> updateUser(HttpServletRequest request, HttpServletResponse response, @RequestParam String userId, @RequestParam String loginFlag) {
+	public Map<String, Object> updateUserByDelete(HttpServletRequest request, HttpServletResponse response, @RequestParam String userId, @RequestParam String delFlag) {
 		Map<String, Object> respMap = new HashMap<String, Object>();
 		Map<String, Object> paraMap = new HashMap<String, Object>();
-		paraMap.put("userId", userId);
-		paraMap.put("loginFlag", loginFlag);
-		int rs = organizationInfoService.updateUserStatus(paraMap);
 		User user = systemService.getUser(userId);
+		if ("0".equals(delFlag)) {
+			List<Map<String, Object>> rsList = organizationInfoService.queryOtherUserByMobile(user);
+			if (rsList != null && rsList.size() > 0) {
+				respMap.put("sucFlag", "0");
+				respMap.put("message", "手机号码已被其它账户使用，请联系管理员!");
+				return respMap;
+			}
+		} 
+		
+		paraMap.put("userId", userId);
+		paraMap.put("delFlag", delFlag);
+		int rs = organizationInfoService.updateUserByDelete(paraMap);
 		UserUtils.clearCache(user);
+		UserUtils.kickOut(user);	// 剔除某用户待完善
 		respMap.put("sucFlag", "1");
 		return respMap;
 	}
