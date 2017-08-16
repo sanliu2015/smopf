@@ -25,7 +25,15 @@
 		select 
 			<include refid="userColumns"/>
 		from org_attachment a 
-		where a.org_code=#{orgCode} and a.item_code=#{itemCode}
+		<where>
+			a.org_code=#{orgCode} 
+			<if test="itemCode != null and itemCode != ''">
+				and a.item_code=#{itemCode}
+			</if>
+			<if test="itemCode != null and itemCode != ''">
+				and a.item_code=#{itemCode}
+			</if>
+		</where>
 	</select>
 	
 	<insert id="insert">

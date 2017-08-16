@@ -27,9 +27,11 @@
            <dd>
                <a href="${ctx}/orgAuditLog/list?module=1" ${module == 1 ? 'class="active"' : ''}><i class="iconfont f12">&#xe604;</i>审核状态</a>
                <a href="${ctx}/organizationInfo/index?module=2" ${module == 2 ? 'class="active"' : ''}><i class="iconfont f12">&#xe604;</i>机构信息</a>
-               <c:if test="${fns:getUser().userType == 'FADM'}">
+               <%-- <c:if test="${fns:getUser().userType == 'FADM'}"> --%>
+               <shiro:hasRole name="orgAdmin">
                <a href="${ctx}/organizationInfo/userList?module=3" ${module == 3 ? 'class="active"' : ''}><i class="iconfont f12">&#xe604;</i>账号维护</a>
-           	   </c:if>
+           	   </shiro:hasRole>
+           	    <%-- </c:if> --%>
            </dd>
         </dl>
 		

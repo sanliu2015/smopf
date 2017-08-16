@@ -18,7 +18,7 @@
     <script type="text/javascript" src="${ctxStatic}/jquery/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="${ctxStatic}/jquery-form/jquery.form.min.js"></script>
     <script type="text/javascript" src="${ctxStatic}/layer/3.0.3/layer.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.js?v201708151400"></script>
 	<style type="text/css">
 		.hide{display: none;}
 		#messageBox label{display:inline-block}
@@ -34,7 +34,11 @@
 			$("#inputForm").validate({
 				rules:{
                     orgCode:{
-                        required:true
+                        required:true,
+                        remote: {
+                        	type:"POST",
+                        	url:"${ctx}/register/checkOrganExists"
+                        }
                     },
                     orgName:{
                         required:true
@@ -121,7 +125,7 @@
 					} else if (element.attr("id") == "validateCode" || element.attr("id") == "mobileCheckCode") {
 						error.insertAfter(element.parent());
 					} else {
-						error.insertAfter(element);
+						error.insertAfter(element.parent());
 					}
 				}
 			});
@@ -160,7 +164,6 @@
                     <div class="cell-right">
                         <input type="text" name="orgCode" id="orgCode" class="yui-input w350" placeholder="请输入组织机构代码">
                     </div>
-                    <!-- <div class="errorMsg mt10 fl"><span class="ml15 red">* 机构已被注册，请联系机构管理员添加账号</span><br><span class="ml15 red">[姓名*吉吉，手机123****4567,邮箱123***@howbuy.com]</span></div> -->
                 </div>
                 <div class="yui-form-cell mb30 clear">
                     <div class="cell-left w400"><span class="ml15 red">*</span>机构法定名称：</div>
@@ -226,7 +229,7 @@
     
     <script type="text/javascript" src="${ctxStatic}/org/js/foot.js"></script>
     <script type="text/javascript" src="${ctxStatic}/org/js/yui.js"></script>
-    <script type="text/javascript" src="${ctxStatic}/org/js/main.js?v201708111100"></script>
+    <script type="text/javascript" src="${ctxStatic}/org/js/main.js"></script>
 	<script type="text/javascript">
 		function refreshCode() {
 			$("#checkCode").attr("src", "${pageContext.request.contextPath}/servlet/validateCodeServlet?"+new Date().getTime());

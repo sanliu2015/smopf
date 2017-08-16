@@ -1017,7 +1017,16 @@ $.extend($.validator, {
 				dataType: "json",
 				data: data,
 				success: function( response ) {
-					validator.settings.messages[element.name].remote = previous.originalMessage;
+//					validator.settings.messages[element.name].remote = previous.originalMessage;
+					var tempResponse = response;
+					if (tempResponse.validResult != undefined) {
+                        response = tempResponse.validResult;
+                    }
+					if (tempResponse.message != undefined) {
+                        validator.settings.messages[element.name].remote = tempResponse.message;
+                    } else {
+                        validator.settings.messages[element.name].remote = previous.originalMessage;
+                    }
 					var valid = response === true || response === "true";
 					if ( valid ) {
 						var submitted = validator.formSubmitted;

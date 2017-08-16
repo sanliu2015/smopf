@@ -72,31 +72,52 @@ public class RegisterController extends BaseController {
 		return respMap;
 	}
 	
-	
-	@RequestMapping(value = "submit", method = RequestMethod.POST)
+	@RequestMapping(value = "checkOrganExists", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> submit(Register register, HttpServletRequest request, HttpServletResponse response) {
+	public Map<String, Object> checkOrganExists(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> respMap = new HashMap<String, Object>();
-		List<Map<String, Object>> rs = registerService.queryOrganInfo(register.getOrgCode());
+		validOrgan(respMap, request.getParameter("orgCode"));
+		return respMap;
+	}
+	
+	
+	private void validOrgan(Map<String, Object> respMap, String orgCode) {
+		List<Map<String, Object>> rs = registerService.queryOrganInfo(orgCode); 
 		if (rs != null && rs.size() > 0) {
-			respMap.put("sucFlag", "0");		// 失败
+			respMap.put("validResult", false);
 			StringBuilder message = new StringBuilder(200);
-			message.append("机构已被注册，请联系机构管理人添加账户[姓名：")
+			message.append("机构已被注册，请联系机构管理人添加账户[姓名*")
 				.append(rs.get(0).get("adminName").toString().substring(1))
-				.append("，手机：").append(rs.get(0).get("adminMobile").toString().substring(0,3))
+				.append("，手机").append(rs.get(0).get("adminMobile").toString().substring(0,3))
 				.append("****").append(rs.get(0).get("adminMobile").toString().substring(7));
 			int emailFlagIndex = rs.get(0).get("adminEmail").toString().indexOf("@");	// @索引位置
-			int halfIndex = emailFlagIndex >> 2;
-			message.append("，邮箱：").append(rs.get(0).get("adminEmail").toString().substring(0,halfIndex));
-			if (halfIndex == 0) {
-				message.append("*");
+			int halfIndex = emailFlagIndex/2;
+			if (emailFlagIndex%2 == 0) {	// @前面是偶数个字符
+				message.append("，邮箱").append(rs.get(0).get("adminEmail").toString().substring(0,halfIndex));
+				for (int i=0; i<halfIndex; i++) {
+					message.append("*");
+				}
 			} else {
+				message.append("，邮箱").append(rs.get(0).get("adminEmail").toString().substring(0,halfIndex+1));
 				for (int i=0; i<halfIndex; i++) {
 					message.append("*");
 				}
 			}
-			message.append(rs.get(0).get("adminEmail").toString().substring(emailFlagIndex));
+			message.append(rs.get(0).get("adminEmail").toString().substring(emailFlagIndex)).append("]");
 			respMap.put("message", message.toString());
+		} else {
+			respMap.put("validResult", true);
+		}
+	}
+
+
+	@RequestMapping(value = "submit", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> submit(Register register, HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> respMap = new HashMap<String, Object>();
+		validOrgan(respMap, request.getParameter("orgCode"));
+		if ("false".equals(respMap.get("validResult").toString())) {
+			respMap.put("sucFlag", "0");	
 		} else {
 			String errorStr = beanValidatorRetErrorStr(register);
 			if (StringUtils.isBlank(errorStr)) {

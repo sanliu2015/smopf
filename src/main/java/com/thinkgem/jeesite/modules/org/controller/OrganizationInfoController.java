@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -150,7 +152,7 @@ public class OrganizationInfoController extends BaseController {
 		return respMap;
 	}
 	
-	
+	@RequiresRoles("orgAdmin")
 	@RequestMapping(value = "userList")
 	public String userList(HttpServletRequest request, HttpServletResponse response) {
 		User user = UserUtils.getUser();
@@ -160,6 +162,7 @@ public class OrganizationInfoController extends BaseController {
 		return "modules/org/userList";
 	}
 	
+	@RequiresRoles("orgAdmin")
 	@RequestMapping(value = "updateUserByDelete")
 	@ResponseBody
 	public Map<String, Object> updateUserByDelete(HttpServletRequest request, HttpServletResponse response, @RequestParam String userId, @RequestParam String delFlag) {
@@ -184,6 +187,7 @@ public class OrganizationInfoController extends BaseController {
 		return respMap;
 	}
 	
+	@RequiresRoles("orgAdmin")
 	@RequestMapping(value = "addUser")
 	public String addUser(HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("module", request.getParameter("module"));
@@ -196,6 +200,7 @@ public class OrganizationInfoController extends BaseController {
 	 * @param response
 	 * @return
 	 */
+	@RequiresRoles("orgAdmin")
 	@RequestMapping(value = "saveUser")
 	@ResponseBody
 	public Map<String, Object> saveUser(HttpServletRequest request, HttpServletResponse response) {

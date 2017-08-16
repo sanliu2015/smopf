@@ -8,5 +8,5 @@
 <!-- js -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/jquery/jquery-2.2.4.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/org/js/yui.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/static/org/js/main.js?v201707251300"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/static/org/js/main.js?v201708161500"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/layer/3.0.3/layer.js"></script>

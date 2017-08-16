@@ -10,6 +10,8 @@ public class Test {
 		
 //		String a = "{\"kdUtStockId\":\"239700\",\"barCodeList\":\"'170726536505','170726596744','170726879403','170726052768','170726863273'\"}";
 		
-		System.out.println(SystemService.entryptPassword("111111"));
+//		System.out.println(SystemService.entryptPassword("111111"));
+		System.out.println(3>>2);
+		
 	}
 }

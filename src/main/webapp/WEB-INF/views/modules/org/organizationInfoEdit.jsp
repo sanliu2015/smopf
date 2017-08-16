@@ -119,7 +119,7 @@
                         email:true
                     },
                     contactMobile:{
-                        required:true,
+                        required:false,
                         isMobile:true,
                         remote: "${ctx}/organizationInfo/checkMobileOnEdit"
                     },
@@ -192,7 +192,7 @@
 					} else if (element.attr("id") == "validateCode" || element.attr("id") == "mobileCheckCodeOld" || element.attr("id") == "mobileCheckCodeNew") {
 						error.insertAfter(element.parent());
 					} else {
-						error.insertAfter(element);
+						error.insertAfter(element.parent());
 					}
 				}
 			});
@@ -251,6 +251,7 @@
                 <div class="cell-right">
                     <input type="text" name="contactMobile" id="contactMobile" class="yui-input w350" value='${organMap.adminMobile}' placeholder="">
                 </div>
+                <div class="errorMsg mt10 fl"><span class="ml10 gray9">*修改联系人手机号填写</span></div>
             </div>
             <div class="yui-form-cell mb5 clear">
                 <div class="cell-left w290">新手机验证码：</div>
@@ -258,12 +259,14 @@
                     <input type="text" name="mobileCheckCodeNew" id="mobileCheckCodeNew" class="yui-input w200" maxlength='6' placeholder="6位数字验证码">
                 </div>
                 <a href="javascript:void(0)" id="newMobile" class="requestBtn fl w140">获取验证码</a>
+                <div class="errorMsg mt10 fl"><span class="ml10 gray9">*修改联系人手机号填写</span></div>
             </div>
             <div class="yui-form-cell mb5 clear">
                 <div class="cell-left w290">新手机密码：</div>
                 <div class="cell-right">
                     <input type="password" name="password" id="password" class="yui-input w350" placeholder="密码需为6-32位字符" maxlength="32" minlength="6">
                 </div>
+                <div class="errorMsg mt10 fl"><span class="ml10 gray9">*修改联系人手机号填写</span></div>
             </div>
             <div class="yui-form-cell mt30 clear">
                 <div class="cell-left w290">&nbsp;</div>

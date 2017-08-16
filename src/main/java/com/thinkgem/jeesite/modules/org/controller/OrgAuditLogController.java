@@ -10,15 +10,21 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.common.collect.Maps;
 import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.modules.org.entity.OrgAttachment;
+import com.thinkgem.jeesite.modules.org.entity.OrgAuditLog;
 import com.thinkgem.jeesite.modules.org.entity.OrganizationInfo;
+import com.thinkgem.jeesite.modules.org.service.OrgAttachmentService;
 import com.thinkgem.jeesite.modules.org.service.OrgAuditLogService;
 import com.thinkgem.jeesite.modules.org.service.OrganizationInfoService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
@@ -37,6 +43,8 @@ public class OrgAuditLogController extends BaseController {
 	@Autowired
 	private OrgAuditLogService orgAuditLogService;
 	@Autowired
+	private OrgAttachmentService orgAttachmentService;
+	@Autowired
 	private OrganizationInfoService organizationInfoService;
 
 	@RequestMapping(value = {"","list"})
@@ -48,10 +56,32 @@ public class OrgAuditLogController extends BaseController {
 		return "modules/org/orgAuditLogList";
 	}
 	
+	@RequestMapping(value = "view")
+	public String orgAuditView(OrgAuditLog orgAuditLog, HttpServletRequest request, HttpServletResponse response, Model model) {
+		OrgAuditLog auditLog = orgAuditLogService.get(request.getParameter("id"));
+		List<Map<String, Object>> organMap = organizationInfoService.queryOrganInfo(auditLog.getOrgCode());
+		request.setAttribute("organMap", organMap.get(0));
+		List<Map<String, Object>> auditLogList = orgAuditLogService.queryAuditLog(auditLog);
+		model.addAttribute("auditLogList", auditLogList);
+		request.setAttribute("module", request.getParameter("module"));
+		return "modules/org/auditView";
+	}
+	
 	@RequestMapping(value = "uploadInit")
 	public String uploadInit(HttpServletRequest request, HttpServletResponse response) {
 		OrganizationInfo organizationInfo = organizationInfoService.findOrgan(UserUtils.getUser().getOrgCode());
 		request.setAttribute("organ", organizationInfo);
+//		OrgAttachment attachment = new OrgAttachment();
+//		attachment.setOrgCode(organizationInfo.getCode());
+//		List<OrgAttachment> dtlList = orgAttachmentService.findList(attachment);
+//		if (dtlList != null && dtlList.size() > 0) {
+//			Map<String, Object> attachmentMap = Maps.newHashMap();
+//			for (OrgAttachment orgAttachment : dtlList) {
+//				attachmentMap.put(orgAttachment.getItemCode(), orgAttachment);
+//			}
+//			request.setAttribute("attachmentMap", attachmentMap);
+//		}
+		
 		return "modules/org/orgAuditLogUpload";
 	}
 	
@@ -64,10 +94,10 @@ public class OrgAuditLogController extends BaseController {
 				respMap.put("sucFlag", "0");
 				respMap.put("msg", "文件过大，请调整后再上传");
 			} else {
-				orgAuditLogService.saveFile(multipartFile, request);
+				orgAuditLogService.saveFile(multipartFile, request);	// 保存在本地
+				respMap.put("sucFlag", "1");
 			}
 		}
-		respMap.put("sucFlag", "1");
 		return respMap;
 	}
 	

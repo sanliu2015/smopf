@@ -57,38 +57,88 @@
             <div class="downloadBox tac">
                 <ul class="clear">
                     <li><a href="${ctx}/downloadNative?fileName=产品净值保证函模板.jpg&filePath=/static/templateDownload/产品净值保证函模板.jpg"><span>产品净值保证函模板下载</span></a></li>
-                    <li><a href="${ctx}/downloadNative?fileName=产品净值保证函模板.jpg&filePath=/static/templateDownload/产品披露授权函模板.jpg"><span>产品披露授权函模板下载</span></a></li>
+                    <li><a href="${ctx}/downloadNative?fileName=产品披露授权函模板.jpg&filePath=/static/templateDownload/产品披露授权函模板.jpg"><span>产品披露授权函模板下载</span></a></li>
                 </ul>
             </div>
             
-            <div class="upload tac">
+            <%-- 
+            <div class="upload tac" style="margin:0px 0px;">
+            	<ul class="clear">
+            	 	<c:if test="${not empty organ and (organ.licenceStatus ne '3')}">
+            	 	<li style="height:auto;border:0px;">
+            	 		<c:choose> 
+                       		<c:when test="${not empty attachmentMap and attachmentMap.1.suffix == '.pdf'}">
+                       			<img alt="营业执照"  src="${ctxStatic}/org/images/pdf.jpg" data-path="${ctx}${attachmentMap.1.filePath}${saveFileName}" style="width:182px;height:130px;" id="1" onclick="preview(this);">
+                       		</c:when>
+                       		<c:when test="${not empty attachmentMap and attachmentMap.1.suffix != '.pdf'}">
+                       			<img alt="营业执照"  src="${ctx}${attachmentMap.1.filePath}${saveFileName}" data-path="${ctx}${attachmentMap.1.filePath}${saveFileName}" style="width:144px;height:104px;" id="1" onclick="preview(this);">
+                       		</c:when>
+                       		<c:otherwise>
+                       			<img alt="营业执照"  src="" style="width:182px;height:130px;" id="1" onclick="preview(this);">
+                       		</c:otherwise>
+                       	</c:choose>	
+            	 	</li>
+            	 	</c:if>
+            	 	<c:if test="${not empty organ and organ.logStatus ne '3'}">
+            	 	<li style="height:auto;border:0px;">
+            	 		<c:choose> 
+                       		<c:when test="${not empty attachmentMap and attachmentMap.1.suffix == '.pdf'}">
+                       			<img alt="产品净值保证函"  src="${ctxStatic}/org/images/pdf.jpg" data-path="${ctx}${attachmentMap.1.filePath}${attachmentMap.1.saveFileName}" style="width:182px;height:130px;" id="2" onclick="preview(this);">
+                       		</c:when>
+                       		<c:when test="${not empty attachmentMap and attachmentMap.2.suffix != '.pdf'}">
+                       			<img alt="产品净值保证函"  src="${ctx}${attachmentMap.2.filePath}${attachmentMap.2.saveFileName}" data-path="${ctx}${attachmentMap.2.filePath}${attachmentMap.2.saveFileName}" style="width:144px;height:104px;" id="2" onclick="preview(this);">
+                       		</c:when>
+                       		<c:otherwise>
+                       			<img alt="产品净值保证函"  src="" style="width:182px;height:130px;" id="2" onclick="preview(this);">
+                       		</c:otherwise>
+                       	</c:choose>	
+            	 	</li>
+            	 	</c:if>
+            	 	<c:if test="${not empty organ and organ.loaStatus ne '3'}">
+            	 	<li style="height:auto;border:0px;">
+            	 		<c:choose> 
+                       		<c:when test="${not empty attachmentMap and attachmentMap.1.suffix == '.pdf'}">
+                       			<img alt="产品披露授权函"  src="${ctxStatic}/org/images/pdf.jpg" data-path="${ctx}${attachmentMap.3.filePath}${attachmentMap.3.saveFileName}" style="width:182px;height:130px;" id="3" onclick="preview(this);">
+                       		</c:when>
+                       		<c:when test="${not empty attachmentMap and attachmentMap.1.suffix != '.pdf'}">
+                       			<img alt="产品披露授权函"  src="${ctx}${attachmentMap.3.filePath}${attachmentMap.3.saveFileName}" data-path="${ctx}${attachmentMap.3.filePath}${attachmentMap.3.saveFileName}" style="width:144px;height:104px;" id="3" onclick="preview(this);">
+                       		</c:when>
+                       		<c:otherwise>
+                       			<img alt="产品披露授权函"  src="" style="width:182px;height:130px;" onclick="preview(this);" id="3">
+                       		</c:otherwise>
+                       	</c:choose>	
+            	 	</li>
+            	 	</c:if>
+            	</ul>
+            </div>
+            
+            --%>
+            <div class="upload tac" style="margin:0px 0px;">
                 <ul class="clear">
                 	<c:if test="${not empty organ and (organ.licenceStatus ne '3')}">
-                    <li>
-                    	<%-- <img src="${ctxStatic}/org/images/pdf.jpg" alt="" style="width:182px;height:130px;"> --%>
-                    	<i class="iconfont">&#xe615;</i><span>上传营业执照<small class="gray9">(正面)</small></span>
+                    <li><i class="iconfont">&#xe615;</i><span>上传营业执照<small class="gray9">(正面)</small></span>
                     	<p class="clear mt10"><b style="text-align:center;color:#FF6347">${fns:getDictLabel(organ.licenceStatus, 'licence_status','')}</b></p>
-                    	<input class="layui-upload-file" type="file" name="file" id="1">
+                    	<input class="layui-upload-file" type="file" name="file" id="1" >
                     	<input type="hidden" name="itemStatus" value="${organ.licenceStatus}" />
                     </li>
                     </c:if>
                     <c:if test="${not empty organ and organ.logStatus ne '3'}">
                     <li><i class="iconfont">&#xe615;</i><span>产品净值保证函上传成功<small class="gray9">(须加盖公章)</small></span>
-                    <p class="clear mt10"><b style="text-align:center;color:#FF6347">${fns:getDictLabel(organ.logStatus, 'licence_status','')}</b></p>
+                    	<p class="clear mt10"><b style="text-align:center;color:#FF6347">${fns:getDictLabel(organ.logStatus, 'licence_status','')}</b></p>
                     	<input class="layui-upload-file" type="file" name="file" id="2" >
                     	<input type="hidden" name="itemStatus" value="${organ.logStatus}" />
                     </li>
                     </c:if>
                     <c:if test="${not empty organ and organ.loaStatus ne '3'}">
                     <li><i class="iconfont">&#xe615;</i><span>产品披露授权函<small class="gray9">(须加盖公章)</small></span>
-                    <p class="clear mt10"><b style="text-align:center;color:#FF6347">${fns:getDictLabel(organ.loaStatus, 'licence_status','')}</b></p>
+                    	<p class="clear mt10"><b style="text-align:center;color:#FF6347">${fns:getDictLabel(organ.loaStatus, 'licence_status','')}</b></p>
                     	<input class="layui-upload-file" type="file" name="file" id="3">
                     	<input type="hidden" name="itemStatus" value="${organ.loaStatus}" />
                     </li>
                     </c:if>
                 </ul>
                 <div class="notice tac">注意：上传文件为图片或PDF格式，请务必限制在5MB以内</div>
-                <a href="javascript:void(0)" class="btn-style-a db w350 mt50 mgCenter" onclick="submitAudit();">提 交</a>
+                <a href="javascript:void(0)" class="btn-style-a db w350 mt30 mgCenter" onclick="submitAudit();">提 交</a>
             </div>
             
         </div>
