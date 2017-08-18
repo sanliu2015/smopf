@@ -21,7 +21,7 @@
                     <th width='360px'>描述</th>
                     <th>操作</th>
                 </tr>
-                <c:forEach items="${list}" var="obj">
+                <c:forEach items="${list}" var="obj" varStatus="status">
                 <tr>
                     <td>${obj.orgName}</td>
                     <td>${obj.credt}</td>
@@ -35,7 +35,7 @@
                     	<td><span class="red">${fns:getDictLabel(obj.status, 'audit_status', '')}</span></td>
 	                    <td>${obj.msg}</td>
 	                    <td>
-	                    	<c:if test="${obj.lastStatus != '0'}">
+	                    	<c:if test="${obj.lastStatus != '0' and status.index == 0}">
 	                    	<a href="${ctx}/orgAuditLog/uploadInit" class="reUpload fwb">重新上传</a>
 	                    	</c:if>
 	                    	<a href="${ctx}/orgAuditLog/view?id=${obj.id}&module=1" class="reUpload fwb">详情</a>
