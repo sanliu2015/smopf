@@ -29,22 +29,26 @@
                     <c:when test="${obj.status eq '1'}">
 	                    <td><span class="green">${fns:getDictLabel(obj.status, 'audit_status', '')}</span></td>
 	                    <td>-</td>
-	                    <td><a href="${ctx}/orgAuditLog/view?id=${obj.id}" class="reUpload fwb">详情</a></td>
+	                    <td>-</td>
                     </c:when>
                     <c:when test="${obj.status eq '2'}">
                     	<td><span class="red">${fns:getDictLabel(obj.status, 'audit_status', '')}</span></td>
 	                    <td>${obj.msg}</td>
 	                    <td>
-	                    	<c:if test="${obj.lastStatus != '0' and status.index == 0}">
-	                    	<a href="${ctx}/orgAuditLog/uploadInit" class="reUpload fwb">重新上传</a>
-	                    	</c:if>
-	                    	<a href="${ctx}/orgAuditLog/view?id=${obj.id}&module=1" class="reUpload fwb">详情</a>
+	                    	<c:choose>
+		                    	<c:when test="${obj.lastStatus != '0' and status.index == 0}">
+		                    	<a href="${ctx}/orgAuditLog/uploadInit" class="reUpload fwb">重新上传</a>
+		                    	</c:when>
+		                    	<c:otherwise>
+		                    	-
+		                    	</c:otherwise>
+	                    	</c:choose>
 	                    </td>
                     </c:when>	
                     <c:otherwise>
                     	<td>${fns:getDictLabel(obj.status, 'audit_status', '')}</td>
 	                    <td>-</td>
-	                    <td><a href="${ctx}/orgAuditLog/view?id=${obj.id}" class="reUpload fwb">详情</a></td>
+	                    <td>-</td>
                     </c:otherwise>
                     </c:choose>
                 </tr>
